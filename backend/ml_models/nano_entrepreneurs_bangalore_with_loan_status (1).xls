@@ -1,0 +1,101 @@
+Name,Age,Yearly Income (INR),Loan Amount (INR),Aadhar Number,PAN Number,UPI ID,Business Type,Seasonality,Latitude,Longitude,Business Registration,ID Proof,Bank Statements,Photo Proof,Feedback Name,Feedback Contact Number,Feedback Email,Loan Status
+Ehsaan Deol,28,372023,22041,749172661355,mAEbX3302z,rati47@upi,Grocery Store,Summer Peak,12.906032,77.644737,No,No,No,Yes,Hunar Dugar,3986915677,jayantbhardwaj@hotmail.com,0
+Hunar Som,36,93260,186339,622923612064,GgzKz4461J,hridaan62@upi,Freelance Services,Year-round,12.963354,77.638304,No,Yes,Yes,No,Dhanush Garg,5009356134,shaanmahajan@yahoo.com,1
+Gatik Arya,26,318302,21655,113455777944,RcQzh4167g,aayush69@upi,Auto Garage,Summer Peak,12.984013,77.554318,No,No,Yes,No,Bhamini Deo,3433721045,sehershan@tailor.net,0
+Jayesh Krishnan,33,466206,173710,451398284101,NaMGP1805B,anandmyra@upi,Grocery Store,Summer Peak,13.029913,77.584121,Yes,Yes,Yes,No,Bhamini Seth,3785067544,mishashanker@warrior-chander.biz,0
+Tushar Guha,24,109716,86554,236490946620,eCMMZ9189P,jayan95@upi,Mobile Repair,Winter Peak,13.076544,77.531257,No,No,Yes,No,Tara Tandon,9379631058,alia73@brar-reddy.net,0
+Ehsaan Bava,50,373394,27988,122788911471,qmKeD6504h,swamyamira@upi,Small Retail Shop,Monsoon Dependent,13.096202,77.666258,Yes,No,Yes,Yes,Zara Salvi,2587098440,chauhantanya@krish-gour.com,1
+Kavya Gopal,35,72779,129022,998498547645,zZYQU8673x,azad42@upi,Mobile Repair,Winter Peak,13.039755,77.538517,Yes,No,Yes,No,Aayush Johal,5861315276,dhanuktoor@hotmail.com,0
+Piya Shan,29,436944,108430,138732936118,MWoOZ8946T,borazeeshan@upi,Auto Garage,Year-round,13.03168,77.623888,Yes,No,Yes,No,Diya Sridhar,2670266379,manikyathaman@bhagat-issac.com,0
+Badal Yadav,23,204050,101606,951913715694,HwyYI2347X,devanshtiwari@upi,Street Vendor,Summer Peak,13.033552,77.588422,No,No,Yes,No,Anya Wason,4159001040,vritikatiwari@yahoo.com,0
+Eva Dara,33,211441,28388,825102430171,RkHdv7596u,mamootydani@upi,Auto Garage,Monsoon Dependent,13.022026,77.67009,No,Yes,Yes,No,Aayush Kale,9940310590,bhattkismat@sharma-bhasin.com,1
+Oorja Boase,47,413618,73996,893331452150,ioeft4772U,msawhney@upi,Auto Garage,Year-round,13.097704,77.63967,No,Yes,No,No,Mannat Kurian,9122778931,krishsaran@hotmail.com,0
+Ishaan Char,40,237220,33753,540918888539,hVFOH6866l,kapurranbir@upi,Home-based Tailoring,Year-round,12.968339,77.520163,Yes,No,Yes,Yes,Zoya Vaidya,8498917000,ira28@sarraf-wali.com,0
+Shaan Salvi,57,338884,28777,812295237848,PCUOt7167m,ramamanjari@upi,Small Retail Shop,Monsoon Dependent,13.095248,77.533186,No,Yes,No,No,Vihaan Vig,2728045910,wsura@dhar-sachdev.net,0
+Zoya Yohannan,24,176105,171297,311241692290,usYIB7016C,ahujakimaya@upi,Handicrafts,Monsoon Dependent,13.084163,77.575186,Yes,No,Yes,Yes,Dhanuk Bobal,4775199437,madhup55@gmail.com,0
+Divyansh Devi,51,385940,177227,772109717125,ARNzM6109c,ldube@upi,Mobile Repair,Year-round,13.072257,77.655158,No,Yes,Yes,Yes,Ela Reddy,3260878257,kavya14@kata.com,1
+Vedika Tandon,29,66281,15348,330164473299,zvxAn3507C,lavanya80@upi,Freelance Services,Year-round,13.076096,77.50546,No,No,No,Yes,Zeeshan Iyengar,3405417516,akashyap@sachdev.net,0
+Ritvik Sankar,42,317363,165457,960991510875,QSwow2881R,miraanreddy@upi,Home-based Tailoring,Year-round,13.036715,77.697177,Yes,No,Yes,No,Anahi Subramaniam,8967301226,mandadvika@gmail.com,1
+Dishani Verma,30,64051,184519,227212707261,RFHRY7130g,sundaramvihaan@upi,Grocery Store,Winter Peak,12.967909,77.617765,Yes,Yes,No,Yes,Taimur Warrior,9236474684,qsarma@yahoo.com,1
+Prerak Chada,25,412325,104322,663357064721,eXunh4091I,duttmiraan@upi,Grocery Store,Monsoon Dependent,13.061129,77.652546,No,No,Yes,No,Sumer Jayaraman,9920922141,gabadhanuk@yahoo.com,1
+Tushar Dutt,35,166880,106938,475473952650,mFJbM2513k,anvilall@upi,Tiffin Service,Monsoon Dependent,13.04895,77.528735,No,Yes,Yes,No,Vedika Sankar,7197045260,bramaswamy@gmail.com,0
+Rohan Sandal,50,127341,130178,192624398811,CyrGE1406C,ideo@upi,Small Retail Shop,Festive Season,13.073589,77.553396,No,Yes,Yes,No,Onkar Sastry,6325558313,ucontractor@yahoo.com,1
+Kabir Seshadri,30,473494,96734,116747610541,HzOcK3605n,mreddy@upi,Handicrafts,Winter Peak,13.023854,77.643043,No,No,Yes,No,Divyansh Andra,8423932941,tkade@yahoo.com,0
+Mahika Bir,37,441406,100475,613931794923,xHvfi4620Q,golezeeshan@upi,Handicrafts,Monsoon Dependent,12.978206,77.694319,Yes,Yes,Yes,Yes,Bhavin Bath,5772819128,sanahans@kaul-mahajan.net,1
+Nitya Johal,34,239885,156830,676946459532,aMmYL6858i,dahluwalia@upi,Auto Garage,Monsoon Dependent,12.97383,77.621034,No,Yes,Yes,No,Arhaan Zacharia,5524841140,jhalder@tata-gopal.com,1
+Diya Halder,29,288283,164816,162856657936,yRsGq4414r,kairasibal@upi,Freelance Services,Winter Peak,13.099428,77.625235,No,No,Yes,Yes,Samaira Bhargava,3187447924,iandra@gmail.com,1
+Tejas Kumer,59,158751,63905,298052668964,OKqnM7614I,regeivana@upi,Home-based Tailoring,Winter Peak,13.07097,77.561953,Yes,No,No,No,Ojas Kumer,4408433904,hiranedwin@roy.com,1
+Akarsh Bala,60,92702,134254,821669435371,bluDu5922M,drishya69@upi,Freelance Services,Winter Peak,13.080371,77.564919,No,Yes,Yes,Yes,Fateh Kumar,8924618112,daniakarsh@deshpande.org,1
+Akarsh Manne,50,55404,32578,174561266710,gYTqu8633S,yuvaantella@upi,Auto Garage,Summer Peak,12.988433,77.649708,No,Yes,Yes,Yes,Vaibhav Tandon,7714134327,fcontractor@bava.com,1
+Jivin Zacharia,44,218280,186896,606183936273,ltlxd8812g,esamra@upi,Handicrafts,Monsoon Dependent,12.943714,77.615998,Yes,No,No,Yes,Hrishita Wason,4931967534,zara54@magar.com,1
+Akarsh Chander,26,439264,88121,549503391733,FlDXo8095U,malldrishya@upi,Mobile Repair,Year-round,13.097147,77.538754,No,No,Yes,Yes,Bhavin Saxena,1595945662,waliheer@yahoo.com,1
+Zoya Vig,22,262044,109380,452621753574,SVAui1633S,cheemaindrajit@upi,Handicrafts,Year-round,12.924013,77.515043,Yes,Yes,No,No,Aarush Bail,4200943456,bhardwajira@mand.com,0
+Arnav Rajagopal,50,154985,16434,462623173467,nCEXn8668H,aliachokshi@upi,Mobile Repair,Summer Peak,13.053057,77.697663,Yes,Yes,Yes,Yes,Kashvi Vora,5883014406,gulatizaina@din-tripathi.com,0
+Arhaan Soni,57,288431,179570,726954967112,GMyUM2428p,tgolla@upi,Auto Garage,Festive Season,13.091444,77.684006,No,Yes,No,No,Sumer Lata,7663564943,parinaaztoor@deep.org,1
+Umang Bhat,38,493607,69160,126067831429,peTvL7110f,dishani73@upi,Freelance Services,Winter Peak,12.991167,77.56959,Yes,No,Yes,Yes,Keya Dhillon,6307426432,eva73@hotmail.com,1
+Damini Sehgal,47,56492,34770,677907065998,BjhYo0996w,kimaya83@upi,Home-based Tailoring,Monsoon Dependent,13.085134,77.677015,No,No,No,Yes,Riaan Chad,9872297916,samarthdash@hotmail.com,1
+Shamik Wali,23,322385,199669,237297154799,FyadJ4019x,isarna@upi,Food Cart,Winter Peak,12.94809,77.573311,Yes,No,Yes,Yes,Lavanya Bir,1571273470,lakshay32@bhargava-golla.com,0
+Vaibhav Sandhu,38,286112,106935,301160252310,QZAFO3217N,birrania@upi,Handicrafts,Monsoon Dependent,12.920335,77.644684,No,No,No,Yes,Drishya Mangat,8562282098,jivin46@kalla.com,1
+Anay Lanka,30,411870,28093,326338532905,fCSqn4994H,arhaanbose@upi,Auto Garage,Year-round,13.082361,77.545073,Yes,No,Yes,No,Biju Thaman,2306120265,sahil46@gmail.com,0
+Kartik Ravel,47,496374,23042,395601223586,xOsel1989L,hwable@upi,Handicrafts,Festive Season,13.048222,77.658948,Yes,No,Yes,No,Miraya Kakar,3106863760,lakshitchawla@gmail.com,0
+Devansh Atwal,31,480869,114832,725488454945,EUlNn2670l,amirayogi@upi,Grocery Store,Festive Season,12.969286,77.561816,No,Yes,Yes,Yes,Nirvaan Baral,7918700737,rajasamaira@hotmail.com,0
+Kaira Bhatti,48,255384,157157,118165792226,Wcovu0633m,chadhaaaina@upi,Food Cart,Summer Peak,12.963732,77.515822,No,Yes,No,Yes,Parinaaz Saraf,8516186879,vlala@yahoo.com,0
+Vaibhav Datta,27,359109,115793,945482091826,AOmZu9436G,singhanahita@upi,Street Vendor,Summer Peak,12.929078,77.535671,Yes,No,No,No,Jayan Chand,3921143554,aayush32@khanna.com,0
+Diya Kara,52,198266,66537,479616116553,MpiOA3871x,samarth03@upi,Tiffin Service,Monsoon Dependent,13.089449,77.510517,Yes,Yes,No,Yes,Taimur Gulati,8485000922,hanschirag@kapur.com,1
+Vihaan Vig,41,341482,37681,812550935677,uyjxP1218J,jchauhan@upi,Freelance Services,Summer Peak,12.996398,77.529354,No,Yes,Yes,No,Dhanuk Bhatt,3297827382,mahalarhaan@vaidya-kapoor.com,1
+Anahita Gandhi,25,439044,24533,910128490178,nGeFu0332w,pmann@upi,Food Cart,Monsoon Dependent,12.988796,77.561761,No,Yes,Yes,No,Anvi Dada,3872540591,arorataimur@hotmail.com,1
+Jayant Maharaj,36,377136,52729,299077473440,DSaeG7276H,sanghashaan@upi,Grocery Store,Monsoon Dependent,13.083423,77.53599,Yes,No,No,No,Ira Ramanathan,2662404078,prisha26@gmail.com,1
+Tara Tank,49,105714,108261,921345934278,QuagY9077w,divijchakrabarti@upi,Home-based Tailoring,Summer Peak,13.012023,77.527387,Yes,Yes,Yes,No,Vritika Ahluwalia,2622080004,parinaazkrishnan@hotmail.com,1
+Oorja Anand,53,323331,187914,541615439778,gSaeo5804Y,bandiheer@upi,Grocery Store,Winter Peak,13.05223,77.641404,No,No,Yes,Yes,Divit Saran,8165996988,vihaankaur@shukla.com,0
+Zaina Deep,37,382617,87493,910199845829,tWBRx0494v,advik18@upi,Grocery Store,Festive Season,12.935131,77.697251,Yes,No,No,Yes,Sana Mani,1125839894,sarinkiara@hotmail.com,1
+Nirvaan Rout,36,435977,71262,102162280615,JTWJi3367m,riyakohli@upi,Small Retail Shop,Summer Peak,12.915669,77.618495,Yes,Yes,Yes,No,Yuvraj  Chandran,1530636839,hdara@devan.com,1
+Lakshit Kapur,42,104280,152444,308973326664,tPxrW4551B,sundaramumang@upi,Street Vendor,Festive Season,13.064174,77.635131,Yes,Yes,No,No,Ritvik Lala,8432862879,kashvi09@sankar.com,0
+Shray Sami,59,392756,178032,998933591741,OFvtK4231k,ganeshrenee@upi,Tiffin Service,Year-round,13.090105,77.635482,No,Yes,Yes,Yes,Zoya Sule,4803222154,ydugar@yahoo.com,1
+Jhanvi Dar,40,471675,126450,468543705073,XrRWD2914E,aaryahi73@upi,Food Cart,Monsoon Dependent,12.961222,77.670924,Yes,No,No,No,Tanya Sampath,1525114697,emirlala@bhandari-agarwal.com,0
+Indranil Bala,55,142809,29910,611149151819,jvrzk3009m,aaryahi62@upi,Grocery Store,Festive Season,13.016899,77.574501,No,Yes,No,Yes,Parinaaz Sodhi,2844737688,kavyasarin@sidhu.com,1
+Advika Luthra,39,307986,119736,929399762448,uZlaX6305J,tbath@upi,Home-based Tailoring,Winter Peak,13.054952,77.580877,No,Yes,Yes,Yes,Inaaya  Sengupta,5306573912,ayeshadada@yahoo.com,0
+Onkar Jain,39,98857,115263,629097057786,UXdRU4007P,jayantjoshi@upi,Street Vendor,Winter Peak,13.007147,77.630883,Yes,No,Yes,Yes,Dhruv Kanda,5386985376,aaina77@bhattacharyya.com,1
+Bhavin Mall,30,411776,23326,874280549753,bqtqp1256Q,mdeshpande@upi,Auto Garage,Year-round,13.05598,77.695134,No,No,Yes,No,Tanya Dhar,9532468996,nakulsachar@yahoo.com,1
+Bhamini Wagle,38,399672,137979,641162685799,vNDdF9469Z,bchakraborty@upi,Grocery Store,Monsoon Dependent,12.951578,77.639557,Yes,Yes,Yes,Yes,Ayesha Tiwari,1790847879,balanbhavin@korpal.com,0
+Rhea Grewal,56,64766,27775,979570145436,UTfZT0886G,varughesenitara@upi,Auto Garage,Summer Peak,12.949231,77.59493,No,Yes,Yes,Yes,Sumer Rao,2375744486,azad02@soman.com,0
+Mishti Agrawal,39,107366,80093,853330323157,khDEJ8985q,ybose@upi,Auto Garage,Monsoon Dependent,12.977555,77.646591,Yes,Yes,No,No,Dharmajan Soni,3043768134,borahmanjari@dhingra-lad.com,0
+Sana Bansal,33,335757,116526,348391339702,UzDGc2259W,dlalla@upi,Street Vendor,Monsoon Dependent,13.060432,77.695081,Yes,Yes,Yes,Yes,Azad Krish,5611459717,usandal@hotmail.com,0
+Mishti Sabharwal,26,254582,16186,803705184855,ylwbW4829g,hramachandran@upi,Street Vendor,Winter Peak,12.973125,77.519355,Yes,Yes,No,No,Nishith Garg,7018626048,sulepranay@gmail.com,0
+Divyansh Gera,48,99912,76475,246723894594,QUfPF2258U,raghavthakur@upi,Freelance Services,Year-round,12.995432,77.569013,No,No,Yes,Yes,Kartik Krishnan,1159925491,waliayuvaan@mall.com,0
+Tara Dar,59,378937,86299,126098331883,EQYXB5023G,diya19@upi,Small Retail Shop,Winter Peak,13.049163,77.56394,No,No,No,No,Dharmajan Savant,5982973562,laganchauhan@gmail.com,0
+Indrans Lad,49,391114,198748,270628665589,XRLnv0633k,mangatahana@upi,Small Retail Shop,Monsoon Dependent,13.058047,77.572767,No,No,No,Yes,Divit Dhaliwal,7110253019,devansh42@manda.com,0
+Uthkarsh Manda,40,244168,42011,820622778611,bEdkP9358P,ykashyap@upi,Tiffin Service,Monsoon Dependent,12.989912,77.548565,No,No,Yes,No,Eshani Kashyap,8498890153,devanshgoyal@dhar.com,1
+Faiyaz Ramesh,54,159566,162800,757550107469,oWZfd2445M,kabir07@upi,Handicrafts,Festive Season,13.094929,77.609268,No,Yes,No,No,Navya Kalla,9961232067,rjha@sethi.org,1
+Aaryahi Choudhry,28,260092,126789,626101159489,reKWU6958g,armaanwagle@upi,Mobile Repair,Monsoon Dependent,13.065935,77.506951,Yes,Yes,No,Yes,Abram Sidhu,9752712117,dharmajankadakia@hotmail.com,0
+Samaira Karpe,58,232918,102132,733717173121,tVGBt1955r,twali@upi,Auto Garage,Festive Season,13.00926,77.663725,No,Yes,No,No,Eshani Sachdeva,6583045009,anay49@hegde-choudhary.com,1
+Mamooty Raman,39,67948,96732,995055415303,AUSuZ0045x,aaina23@upi,Street Vendor,Festive Season,13.020478,77.526245,Yes,No,Yes,Yes,Jivin Lad,7360063268,balimanjari@srinivasan.com,1
+Kanav Kulkarni,34,198661,62619,755918473318,PdrVr9886D,dhanushbrahmbhatt@upi,Grocery Store,Year-round,13.058039,77.695824,No,No,Yes,No,Priyansh Shetty,3208127727,sandhuriaan@bhattacharyya-kota.info,1
+Jiya Goyal,31,383335,163805,104920518644,lDVsj7331x,bansalpiya@upi,Small Retail Shop,Winter Peak,13.074962,77.598964,Yes,Yes,Yes,Yes,Tiya Subramaniam,4706088534,manjari58@guha.com,1
+Manjari Ghosh,54,140734,130389,194620633704,kXbjj4093P,laddivit@upi,Mobile Repair,Summer Peak,12.936861,77.654469,Yes,Yes,No,Yes,Saanvi Magar,7980637011,bhatiaalisha@krish.com,0
+Renee Golla,52,337133,184040,494149056990,jaLLl9215G,smadan@upi,Auto Garage,Festive Season,12.934504,77.627867,Yes,Yes,No,No,Shanaya Handa,3000826181,masterhimmat@hotmail.com,1
+Mamooty Bali,47,275365,80828,527967381837,wLLMX9276G,hazelwali@upi,Food Cart,Festive Season,13.052597,77.693774,Yes,No,Yes,No,Ranbir Khatri,1184042295,zgopal@yahoo.com,0
+Sahil Virk,49,421624,70894,410477615382,EMUlt2436E,takcharvi@upi,Home-based Tailoring,Monsoon Dependent,13.082871,77.574286,Yes,No,No,Yes,Anaya Choudhary,6704636528,mamooty84@hotmail.com,1
+Kabir Thakkar,46,234880,118676,300871998337,TcBSr2924G,wsarna@upi,Home-based Tailoring,Summer Peak,12.964339,77.520822,Yes,Yes,Yes,No,Ojas Bath,8866353594,eghosh@hotmail.com,1
+Nitara Halder,56,88775,127204,433535626122,inVqB8059y,vyasjhanvi@upi,Small Retail Shop,Winter Peak,12.91387,77.624322,Yes,No,Yes,Yes,Ivana Cheema,3856404340,jivin78@deep.com,1
+Saanvi Bhat,49,123896,125643,930238691772,UhXGr5639Y,piya58@upi,Mobile Repair,Year-round,12.915266,77.579383,Yes,Yes,Yes,No,Yashvi Din,4058354792,mvig@gmail.com,0
+Dhanuk Deshpande,34,453213,68598,340421239997,DJQyx5395k,kadakiaanika@upi,Auto Garage,Festive Season,13.061563,77.578117,No,Yes,No,No,Divyansh Sarma,8474004314,indrajitaurora@gmail.com,1
+Shalv Shan,53,344185,30941,930454389166,TmidQ7941z,vohraarhaan@upi,Tiffin Service,Summer Peak,12.90031,77.515087,Yes,No,Yes,No,Nitara Arya,7604518399,obhatnagar@hotmail.com,0
+Shalv Lad,46,167193,141576,875952836556,aKOnz5525M,bkant@upi,Auto Garage,Year-round,13.061957,77.516033,No,No,No,No,Vaibhav Sampath,2396553982,navyasidhu@sheth.biz,1
+Ehsaan Seth,55,99717,161059,316179583470,lJJZH0414I,aggarwalinaaya@upi,Grocery Store,Festive Season,12.958173,77.581982,Yes,Yes,Yes,Yes,Pranay Wadhwa,5618228479,ssami@yahoo.com,0
+Umang Ray,55,50152,83479,122514362656,WQLIB6866x,dugalanya@upi,Mobile Repair,Summer Peak,12.922086,77.65807,No,Yes,No,No,Azad Brahmbhatt,9720927908,trisha96@singhal.com,1
+Zain Kaur,50,493482,72322,333435314554,rSFUb0974Z,chackopranay@upi,Tiffin Service,Festive Season,12.9317,77.610582,Yes,Yes,Yes,No,Piya Solanki,9771521581,veer87@gmail.com,0
+Ayesha Kumer,44,289176,144372,959734193644,xUWWr9549b,ggour@upi,Mobile Repair,Year-round,13.054896,77.557017,Yes,No,Yes,No,Urvi Goyal,2898775960,stuvanbadami@hotmail.com,0
+Tejas Sinha,35,238694,122536,540876470546,yrqBU1002J,shrayshenoy@upi,Food Cart,Festive Season,13.00712,77.550763,No,No,Yes,No,Vardaniya Rana,1022002967,emirhayer@gmail.com,1
+Yuvaan Seth,36,108411,67048,823364373674,XGhum9783m,xgala@upi,Freelance Services,Monsoon Dependent,12.906352,77.562127,Yes,No,Yes,Yes,Onkar Ahuja,3385930418,kismat95@ahluwalia.com,0
+Hansh Swamy,24,472525,72311,396819902758,XBuTX6528A,shalvjain@upi,Mobile Repair,Festive Season,12.971822,77.581862,Yes,Yes,Yes,No,Kavya Tank,8095202762,yogiprerak@samra.com,1
+Kismat Bumb,40,112574,128135,570896294050,mxnBc0370h,vihaanyohannan@upi,Auto Garage,Summer Peak,13.016717,77.602141,Yes,No,No,Yes,Baiju Chand,2903074630,ybail@gmail.com,1
+Ranbir Ganesh,34,361291,197150,212249273026,nlxqs8730W,mmann@upi,Tiffin Service,Monsoon Dependent,13.086679,77.591282,No,Yes,Yes,Yes,Samar Varty,8450825658,yashviwalia@yahoo.com,1
+Kanav Ramesh,45,481267,136156,820893120857,vIEFn8663D,bhallaanya@upi,Street Vendor,Year-round,13.012851,77.632006,No,No,No,No,Purab Datta,7192901028,jivinghose@chakrabarti.net,1
+Bhavin Hora,43,353190,29411,765602988873,fHSJa9853o,dixitzoya@upi,Food Cart,Year-round,12.906236,77.516121,Yes,Yes,No,No,Gokul Gade,5683104913,horamamooty@yahoo.com,1
+Prisha Bera,24,74358,176864,174108562174,JWSnR9315O,banerjeeritvik@upi,Food Cart,Year-round,12.913105,77.57878,No,No,Yes,No,Neelofar Saha,3836755211,dhanukkeer@hotmail.com,1
+Lagan Walia,58,412797,25282,156966969873,eaUyO5905G,tushar90@upi,Mobile Repair,Summer Peak,13.091089,77.59933,No,Yes,Yes,No,Aniruddh Chand,1126439893,iyertarini@gara.net,1
+Vivaan Thaker,40,120487,128052,823536322575,KqgBc5542w,bakshitaimur@upi,Street Vendor,Winter Peak,13.055566,77.541993,Yes,Yes,Yes,Yes,Divyansh Arya,1379170064,hbarad@gmail.com,1
+Divit Kaur,34,387226,60575,206560405145,sffIR1646f,yuvraj-dhillon@upi,Mobile Repair,Festive Season,12.967229,77.648618,Yes,Yes,No,No,Samaira Krishnan,6701561814,umangtaneja@gmail.com,1
+Neelofar Thakkar,32,235731,125284,594922513566,ybWiZ6785r,maniakarsh@upi,Mobile Repair,Year-round,13.020798,77.647476,No,No,No,No,Zain Dasgupta,8579121146,shanayacheema@lala-rajagopal.com,1
+Samiha Saran,41,467319,67839,730732590582,pMuWD3292V,goswamirenee@upi,Street Vendor,Monsoon Dependent,12.934987,77.627095,No,No,Yes,No,Madhav Madan,3706084187,saxenaaarush@gmail.com,1
+Ela Sharma,36,79212,81037,184530532359,cPXqR3802W,karivardaniya@upi,Auto Garage,Summer Peak,12.920811,77.522459,No,No,Yes,No,Urvi Kunda,6568155788,ebarman@gmail.com,0
