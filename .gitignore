@@ -47,3 +47,33 @@ ENV/
 env.bak/
 venv.bak/
 .ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ESLint
+.eslintcache
+.eslintrc.js
+.eslintrc.json
+.eslintrc.yml
+.eslintrc.yaml
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+.ipynb_checkpoints/*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
