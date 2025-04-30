@@ -22,6 +22,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -153,11 +159,13 @@ async function initializeDatabase() {
 }
 
 // Routes
+console.log('Registering routes...');
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authenticateToken, checkUser, userRoutes);
 app.use('/api/admin', authenticateToken, checkAdmin, adminRoutes);
 app.use('/api/user-details', authenticateToken, checkUser, userDetailsRoutes);
 app.use('/api/results', authenticateToken, checkUser, resultsRoutes);
+console.log('Routes registered successfully');
 
 app.get('/', (req, res) => {
   res.send('Server is running');
@@ -167,6 +175,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Available endpoints:');
+  console.log('- POST /api/auth/login');
+  console.log('- POST /api/auth/register');
+  console.log('- GET /api/results');
+  console.log('- GET /api/user/profile');
+  console.log('- POST /api/user-details');
+  console.log('- GET /api/admin/users (admin only)');
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Please try a different port or close the application using port ${PORT}.`);
+    process.exit(1);
+  } else {
+    console.error('Error starting server:', err);
+    process.exit(1);
+  }
 });

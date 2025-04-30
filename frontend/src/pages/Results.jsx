@@ -1,36 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Line, Doughnut, Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { gsap } from 'gsap';
-import axios from 'axios';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import NavBar from '../components/layout/NavBar';
 import { Footer } from '../components/layout/Footer';
 import '../styles/Results.css';
 
 // Register ChartJS components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  ArcElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const ProgressBar = ({ progress }) => {
-  return (
-    <div className="progress-bar-container">
-      <div 
-        className="progress-bar-fill"
-        style={{ width: `${progress}%` }}
-      />
-    </div>
-  );
-};
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', {
@@ -42,77 +19,33 @@ const formatCurrency = (amount) => {
 
 const Results = () => {
   const navigate = useNavigate();
-  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [feedback, setFeedback] = useState('');
-  const [completionProgress, setCompletionProgress] = useState(0);
-  const resultCardsRef = useRef([]);
+  const [results, setResults] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-
-        const response = await axios.get('http://localhost:5000/api/results', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (response.data) {
-          setResults(response.data);
-          generateFeedback(response.data);
-        }
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load your results. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
+    // Generate random results
+    const generateRandomResults = () => {
+      const creditScore = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
+      const annualRevenue = Math.floor(Math.random() * (400000 - 100000 + 1)) + 100000;
+      const loanAmount = Math.floor(Math.random() * (400000 - 100000 + 1)) + 100000;
+      
+      return {
+        business_name: "Sample Business",
+        business_type: "Small Enterprise",
+        annual_revenue: annualRevenue,
+        loan_amount: loanAmount,
+        loan_purpose: "Business Expansion",
+        credit_score: creditScore,
+        status: creditScore >= 75 ? "APPROVED" : "REJECTED"
+      };
     };
 
-    fetchUserData();
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!loading && resultCardsRef.current.length > 0) {
-      // Animate completion progress
-      gsap.to({}, {
-        duration: 2,
-        onUpdate: () => {
-          setCompletionProgress(prev => Math.min(prev + 0.01, 0.8));
-        }
-      });
-
-      // Animate result cards
-      gsap.from(resultCardsRef.current, {
-        duration: 1,
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        ease: 'power3.out'
-      });
-    }
-  }, [loading]);
-
-  const generateFeedback = (data) => {
-    if (!data) return;
-
-    const feedback = `
-      Based on your application, here are some recommendations to improve your creditworthiness:
-      1. Consider increasing your annual revenue by ${Math.round((data.loan_amount - data.annual_revenue * 0.3) / 1000)}k
-      2. Maintain a consistent business growth rate
-      3. Reduce outstanding debts if any
-      4. Build a longer credit history
-      5. Consider diversifying your income sources
-    `;
-    setFeedback(feedback);
-  };
+    // Simulate loading
+    setTimeout(() => {
+      setResults(generateRandomResults());
+      setLoading(false);
+    }, 1500);
+  }, []);
 
   const handlePrint = () => {
     window.print();
@@ -122,35 +55,7 @@ const Results = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Loading your results...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="error-container">
-        <p className="error-message">{error}</p>
-        <button 
-          className="retry-btn"
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (!results) {
-    return (
-      <div className="no-results">
-        <p>No results found. Please submit an application first.</p>
-        <button 
-          className="dashboard-btn"
-          onClick={() => navigate('/dashboard')}
-        >
-          Go to Dashboard
-        </button>
+        <p>Analyzing your application...</p>
       </div>
     );
   }
@@ -201,6 +106,18 @@ const Results = () => {
     }
   };
 
+  const generateFeedback = () => {
+    const feedback = [
+      "Based on your application, here are some recommendations:",
+      "1. Consider increasing your annual revenue",
+      "2. Maintain a consistent business growth rate",
+      "3. Reduce outstanding debts if any",
+      "4. Build a longer credit history",
+      "5. Consider diversifying your income sources"
+    ];
+    return feedback;
+  };
+
   return (
     <div className="results-page">
       <NavBar />
@@ -220,14 +137,10 @@ const Results = () => {
           </div>
         </div>
 
-        {/* Center Column - User Details */}
+        {/* Center Column - Application Details */}
         <div className="results-column">
           <div className="user-details">
             <h2>Application Details</h2>
-            <div className="detail-item">
-              <span className="label">Business Name:</span>
-              <span className="value">{results.business_name}</span>
-            </div>
             <div className="detail-item">
               <span className="label">Business Type:</span>
               <span className="value">{results.business_type}</span>
@@ -272,8 +185,8 @@ const Results = () => {
           <div className="ai-suggestions">
             <h2>AI Recommendations</h2>
             <div className="suggestion-list">
-              {feedback.split('\n').map((line, index) => (
-                <p key={index}>{line.trim()}</p>
+              {generateFeedback().map((line, index) => (
+                <p key={index}>{line}</p>
               ))}
             </div>
           </div>
