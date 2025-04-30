@@ -60,18 +60,23 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
+  console.log('Login attempt for:', email);
 
   db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
     if (err) {
+      console.error('Database error:', err);
       return res.status(500).json({ error: 'Database error' });
     }
     if (!user) {
+      console.log('User not found:', email);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     try {
+      console.log('Found user:', user.email, 'Role:', user.role);
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
+        console.log('Invalid password for:', email);
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
@@ -82,6 +87,11 @@ router.post('/login', (req, res) => {
         { expiresIn: '24h' }
       );
 
+      // Determine redirect path based on role
+      const redirectPath = user.role === 'admin' ? '/admin' : '/dashboard';
+
+      console.log('Login successful for:', email, 'Redirecting to:', redirectPath);
+
       res.json({
         token,
         user: {
@@ -89,9 +99,11 @@ router.post('/login', (req, res) => {
           name: user.name,
           email: user.email,
           role: user.role
-        }
+        },
+        redirectPath
       });
     } catch (error) {
+      console.error('Login error:', error);
       res.status(500).json({ error: 'Server error' });
     }
   });

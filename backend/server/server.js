@@ -6,10 +6,13 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import connectDB from './config/db.js';
+import authRoutes from './routes/auth.js';
 import userRoutes from './routes/userRoutes.js';
 import userDetailsRoutes from './routes/userDetailsRoutes.js';
 import resultsRoutes from './routes/resultsRoutes.js';
+import adminRoutes from './routes/admin.js';
+import { authenticateToken, checkAdmin, checkUser } from './middleware/auth.js';
+import { seedUsers } from './data/seedData.js';
 
 dotenv.config();
 
@@ -17,10 +20,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const JWT_SECRET = 'your-secret-key'; // In production, use environment variable
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+// Middleware
+app.use(cors());
+app.use(express.json());
 
 // Connect to SQLite database
-const db = new sqlite3.Database(path.join(__dirname, 'finTrust.db'), (err) => {
+const dbPath = path.join(__dirname, 'finTrust.db');
+console.log('Database path:', dbPath);
+
+// Delete existing database file if it exists
+try {
+  require('fs').unlinkSync(dbPath);
+  console.log('Deleted existing database file');
+} catch (err) {
+  console.log('No existing database file to delete');
+}
+
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err.message);
   } else {
@@ -29,8 +47,10 @@ const db = new sqlite3.Database(path.join(__dirname, 'finTrust.db'), (err) => {
   }
 });
 
-// Initialize database tables
-function initializeDatabase() {
+// Initialize database tables and seed data
+async function initializeDatabase() {
+  console.log('Initializing database...');
+  
   // Users table
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -41,7 +61,13 @@ function initializeDatabase() {
       role TEXT DEFAULT 'user',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `, (err) => {
+    if (err) {
+      console.error('Error creating users table:', err);
+    } else {
+      console.log('Users table created/verified');
+    }
+  });
 
   // User details table
   db.run(`
@@ -58,60 +84,80 @@ function initializeDatabase() {
       status TEXT DEFAULT 'pending',
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `, (err) => {
+    if (err) {
+      console.error('Error creating user_details table:', err);
+    } else {
+      console.log('User details table created/verified');
+    }
+  });
 
-  // Create admin user if not exists
-  const adminEmail = 'admin@fintrust.com';
-  const adminPassword = bcrypt.hashSync('admin123', 10);
-  
-  db.get('SELECT * FROM users WHERE email = ?', [adminEmail], (err, row) => {
-    if (!row) {
-      db.run(
-        'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-        ['Admin', adminEmail, adminPassword, 'admin']
-      );
+  // Check if database is empty
+  db.get('SELECT COUNT(*) as count FROM users', async (err, row) => {
+    if (err) {
+      console.error('Error checking database:', err);
+      return;
+    }
+
+    console.log('Current user count:', row.count);
+
+    if (row.count === 0) {
+      console.log('Seeding database with initial data...');
+      // Insert seed users
+      for (const user of seedUsers) {
+        console.log('Seeding user:', user.email);
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        
+        db.run(
+          'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
+          [user.name, user.email, hashedPassword, user.role],
+          function(err) {
+            if (err) {
+              console.error('Error inserting user:', err);
+              return;
+            }
+            console.log('User inserted:', user.email);
+
+            // If user has details, insert them
+            if (user.details) {
+              db.run(
+                `INSERT INTO user_details 
+                 (user_id, business_name, business_type, annual_revenue, 
+                  loan_amount, loan_purpose, credit_score, status)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                  this.lastID,
+                  user.details.business_name,
+                  user.details.business_type,
+                  user.details.annual_revenue,
+                  user.details.loan_amount,
+                  user.details.loan_purpose,
+                  user.details.credit_score,
+                  user.details.status
+                ],
+                (err) => {
+                  if (err) {
+                    console.error('Error inserting user details:', err);
+                  } else {
+                    console.log('User details inserted for:', user.email);
+                  }
+                }
+              );
+            }
+          }
+        );
+      }
+      console.log('Database seeded successfully!');
     }
   });
 }
 
-// Middleware to verify JWT token
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ error: 'Access token required' });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid token' });
-    }
-    req.user = user;
-    next();
-  });
-};
-
-// Middleware to check admin role
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required' });
-  }
-  next();
-};
-
-// Connect to MongoDB
-connectDB();
-
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/user-details', userDetailsRoutes);
-app.use('/api/results', resultsRoutes);
-
-// Use routes
 app.use('/api/auth', authRoutes);
-app.use('/api/user', authenticateToken, userRoutes);
-app.use('/api/admin', authenticateToken, isAdmin, adminRoutes);
+app.use('/api/user', authenticateToken, checkUser, userRoutes);
+app.use('/api/admin', authenticateToken, checkAdmin, adminRoutes);
+app.use('/api/user-details', authenticateToken, checkUser, userDetailsRoutes);
+app.use('/api/results', authenticateToken, checkUser, resultsRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running');

@@ -5,6 +5,8 @@ import { Footer } from "../components/layout/Footer";
 
 export const Dashboard = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
   const navigate = useNavigate();
 
   const steps = [
@@ -16,6 +18,13 @@ export const Dashboard = () => {
     { id: 6, title: "Review & Submit" },
   ];
 
+  const loadingMessages = [
+    "Validating location data...",
+    "Evaluating social feedback...",
+    "Checking financial records...",
+    "Analyzing your application..."
+  ];
+
   const handleFileUpload = (event) => {
     const files = event.target.files;
     if (files.length > 0) {
@@ -23,8 +32,25 @@ export const Dashboard = () => {
     }
   };
 
-  const handleSubmit = () => {
-    navigate("/dashboard");
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    
+    // Show loading messages at intervals
+    for (let i = 0; i < loadingMessages.length; i++) {
+      setLoadingMessage(loadingMessages[i]);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+
+    try {
+      // Here you would typically make an API call to submit the application
+      // For now, we'll just navigate to the results page
+      navigate("/results");
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('There was an error submitting your application. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderStepContent = () => {
@@ -71,14 +97,11 @@ export const Dashboard = () => {
             />
             <select className="input full-width" defaultValue="">
               <option value="" disabled>
-                Select Business Type
+                Select Business Seasonality Type
               </option>
-              <option value="street-vendor">Street Vendor</option>
-              <option value="food-truck">Food Truck</option>
-              <option value="small-retail">Small Retail Shop</option>
-              <option value="local-service">Local Service Provider</option>
-              <option value="handicrafts">Handicrafts Seller</option>
-              <option value="transport">Transport Business</option>
+              <option value="seasonal">Seasonal</option>
+              <option value="non-seasonal">Non-Seasonal</option>
+              <option value="year-round">Year Round</option>
             </select>
             <input
               type="text"
@@ -266,24 +289,36 @@ export const Dashboard = () => {
         </div>
 
         {/* Step Content */}
-        <div className="step-content">{renderStepContent()}</div>
+        <div className="step-content">
+          {isLoading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p className="loading-message">{loadingMessage}</p>
+            </div>
+          ) : (
+            renderStepContent()
+          )}
+        </div>
 
         {/* Navigation Buttons */}
         <div className="step-buttons">
           <button
             className="prev-btn"
-            disabled={currentStep === 1}
+            disabled={currentStep === 1 || isLoading}
             onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
           >
             Previous
           </button>
-          <button className="btn"
-            onClick={() =>
-              currentStep === steps.length
-                ? handleSubmit()
-                : setCurrentStep((prev) => Math.min(prev + 1, steps.length))
-                
-            }
+          <button 
+            className="btn"
+            disabled={isLoading}
+            onClick={() => {
+              if (currentStep === steps.length) {
+                handleSubmit();
+              } else {
+                setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+              }
+            }}
           >
             {currentStep === steps.length ? "Submit Application" : "Next"}
           </button>

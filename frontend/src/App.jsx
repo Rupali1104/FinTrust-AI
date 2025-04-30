@@ -7,10 +7,8 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Dashboard } from "./pages/Dashboard";
-import LoanAnalysis from './pages/LoanAnalysis';
 import Results from './pages/Results';
 import { Footer } from "./components/layout/Footer";
-import FinanceInsights from "./pages/FinanceInsights";
 import Admin from './pages/Admin';
 
 function App() {
@@ -21,8 +19,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/loan-analysis" element={<LoanAnalysis />} />
-        <Route path="/finance-insights" element={<FinanceInsights />} />
         <Route path="/results" element={<Results />} />
         <Route path="/admin" element={<Admin />} />
 

@@ -15,6 +15,24 @@ const generateDummyUsers = () => {
     'Tea Shop', 'Snack Stall', 'Mobile Repair', 'Tailoring Shop',
     'Stationery Shop', 'Flower Stall', 'Paan Shop', 'Small Restaurant'
   ];
+
+  // Generate unique IDs with format: 2 letters + 3 numbers (e.g., AB123)
+  const generateUniqueId = () => {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    
+    // Generate 2 random letters
+    const randomLetters = Array.from({ length: 2 }, () => 
+      letters.charAt(Math.floor(Math.random() * letters.length))
+    ).join('');
+    
+    // Generate 3 random numbers
+    const randomNumbers = Array.from({ length: 3 }, () => 
+      numbers.charAt(Math.floor(Math.random() * numbers.length))
+    ).join('');
+    
+    return `${randomLetters}${randomNumbers}`;
+  };
   
   // Generate 9 approved users (60%) and 6 rejected users (40%)
   const users = Array.from({ length: 15 }, (_, index) => {
@@ -29,7 +47,7 @@ const generateDummyUsers = () => {
     }
     
     return {
-      _id: `user_${index + 1}`,
+      _id: generateUniqueId(),
       name: names[index],
       businessType: businessTypes[Math.floor(Math.random() * businessTypes.length)],
       creditScore: score,

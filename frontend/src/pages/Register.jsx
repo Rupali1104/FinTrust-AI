@@ -1,42 +1,56 @@
 import { useState } from "react";
 import styles from "./Auth.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match!");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      // Add your registration logic here
-      console.log("Registration attempt with:", formData);
-      // For now, just redirect to dashboard
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        name,
+        email,
+        password
+      });
+
+      // Store token and user info
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Navigate to dashboard
       navigate("/dashboard");
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError(err.response?.data?.error || "Registration failed");
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -49,9 +63,8 @@ function Register() {
           <input
             type="text"
             id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
             placeholder="Enter your full name"
           />
@@ -62,9 +75,8 @@ function Register() {
           <input
             type="email"
             id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="Enter your email"
           />
@@ -72,34 +84,54 @@ function Register() {
 
         <div className={styles.formGroup}>
           <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Create a password"
-          />
+          <div className={styles.passwordInputContainer}>
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter your password"
+            />
+            <button
+              type="button"
+              className={styles.togglePassword}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            placeholder="Confirm your password"
-          />
+          <div className={styles.passwordInputContainer}>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="Confirm your password"
+            />
+            <button
+              type="button"
+              className={styles.togglePassword}
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
+          </div>
         </div>
 
         {error && <div className={styles.errorMessage}>{error}</div>}
 
-        <button type="submit" className={styles.submitButton}>
-          Register
+        <button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Registering...' : 'Register'}
         </button>
 
         <div className={styles.authLink}>

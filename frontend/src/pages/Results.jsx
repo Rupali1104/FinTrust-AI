@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { gsap } from 'gsap';
+import axios from 'axios';
 import NavBar from '../components/layout/NavBar';
 import { Footer } from '../components/layout/Footer';
 import '../styles/Results.css';
@@ -43,29 +44,40 @@ const Results = () => {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [feedback, setFeedback] = useState('');
   const [completionProgress, setCompletionProgress] = useState(0);
   const resultCardsRef = useRef([]);
 
   useEffect(() => {
-    // Mock data for demonstration
-    const mockResults = {
-      risk_score: 65,
-      loan_approval_probability: 0.75,
-      suggested_loan_amount: 50000,
-      suggested_interest_rate: 8.5,
-      repayment_period_months: 36,
-      model_confidence: 0.85,
-      model_version: '1.0.0'
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+
+        const response = await axios.get('http://localhost:5000/api/results', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data) {
+          setResults(response.data);
+          generateFeedback(response.data);
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to load your results. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // Simulate API call delay
-    setTimeout(() => {
-      setResults(mockResults);
-      generateFeedback(mockResults);
-      setLoading(false);
-    }, 1500);
-  }, []);
+    fetchUserData();
+  }, [navigate]);
 
   useEffect(() => {
     if (!loading && resultCardsRef.current.length > 0) {
@@ -89,9 +101,11 @@ const Results = () => {
   }, [loading]);
 
   const generateFeedback = (data) => {
+    if (!data) return;
+
     const feedback = `
       Based on your application, here are some recommendations to improve your creditworthiness:
-      1. Consider increasing your annual revenue by ${Math.round((data.suggested_loan_amount - 40000) / 1000)}k
+      1. Consider increasing your annual revenue by ${Math.round((data.loan_amount - data.annual_revenue * 0.3) / 1000)}k
       2. Maintain a consistent business growth rate
       3. Reduce outstanding debts if any
       4. Build a longer credit history
@@ -108,7 +122,35 @@ const Results = () => {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
-        <p>Analyzing your application...</p>
+        <p>Loading your results...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p className="error-message">{error}</p>
+        <button 
+          className="retry-btn"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!results) {
+    return (
+      <div className="no-results">
+        <p>No results found. Please submit an application first.</p>
+        <button 
+          className="dashboard-btn"
+          onClick={() => navigate('/dashboard')}
+        >
+          Go to Dashboard
+        </button>
       </div>
     );
   }
@@ -117,14 +159,14 @@ const Results = () => {
     labels: ['Score', 'Remaining'],
     datasets: [
       {
-        data: [77, 23],
+        data: [results.credit_score, 100 - results.credit_score],
         backgroundColor: (context) => {
           const chart = context.chart;
           const {ctx, chartArea} = chart;
           if (!chartArea) {
             return null;
           }
-          const score = context.dataIndex === 0 ? 77 : 0;
+          const score = context.dataIndex === 0 ? results.credit_score : 0;
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
           if (score <= 30) {
             gradient.addColorStop(0, '#e74c3c');
@@ -172,7 +214,7 @@ const Results = () => {
               <Doughnut data={semiDonutData} options={semiDonutOptions} />
             </div>
             <div className="score-text">
-              <span className="score">77</span>
+              <span className="score">{results.credit_score}</span>
               <span className="total">/ 100</span>
             </div>
           </div>
@@ -181,26 +223,32 @@ const Results = () => {
         {/* Center Column - User Details */}
         <div className="results-column">
           <div className="user-details">
-            <h2>User Information</h2>
+            <h2>Application Details</h2>
             <div className="detail-item">
-              <span className="label">Name:</span>
-              <span className="value">Ramesh</span>
+              <span className="label">Business Name:</span>
+              <span className="value">{results.business_name}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Risk Score:</span>
-              <span className="value">77/100</span>
+              <span className="label">Business Type:</span>
+              <span className="value">{results.business_type}</span>
+            </div>
+            <div className="detail-item">
+              <span className="label">Annual Revenue:</span>
+              <span className="value">{formatCurrency(results.annual_revenue)}</span>
             </div>
             <div className="detail-item">
               <span className="label">Loan Amount:</span>
-              <span className="value">{formatCurrency(results.suggested_loan_amount)}</span>
+              <span className="value">{formatCurrency(results.loan_amount)}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Interest Rate:</span>
-              <span className="value">{results.suggested_interest_rate}%</span>
+              <span className="label">Loan Purpose:</span>
+              <span className="value">{results.loan_purpose}</span>
             </div>
             <div className="detail-item">
-              <span className="label">Term:</span>
-              <span className="value">36 months</span>
+              <span className="label">Status:</span>
+              <span className={`value status-${results.status.toLowerCase()}`}>
+                {results.status}
+              </span>
             </div>
             <div className="action-buttons">
               <button 
@@ -224,11 +272,9 @@ const Results = () => {
           <div className="ai-suggestions">
             <h2>AI Recommendations</h2>
             <div className="suggestion-list">
-              <p>1. Consider increasing your annual revenue by Rs. 10,000</p>
-              <p>2. Maintain consistent business growth</p>
-              <p>3. Reduce outstanding debts</p>
-              <p>4. Build longer credit history</p>
-              <p>5. Diversify income sources</p>
+              {feedback.split('\n').map((line, index) => (
+                <p key={index}>{line.trim()}</p>
+              ))}
             </div>
           </div>
         </div>

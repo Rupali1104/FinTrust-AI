@@ -8,6 +8,44 @@ const __dirname = path.dirname(__filename);
 const router = express.Router();
 const db = new sqlite3.Database(path.join(__dirname, '../finTrust.db'));
 
+// Get all users and their details
+router.get('/users', (req, res) => {
+  db.all(
+    `SELECT u.id, u.name, u.email, u.role, u.created_at,
+            ud.business_name, ud.business_type, ud.annual_revenue,
+            ud.loan_amount, ud.loan_purpose, ud.credit_score, ud.status
+     FROM users u
+     LEFT JOIN user_details ud ON u.id = ud.user_id
+     ORDER BY u.created_at DESC`,
+    (err, users) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json(users);
+    }
+  );
+});
+
+// Update user status
+router.put('/users/:id/status', (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  db.run(
+    'UPDATE user_details SET status = ? WHERE user_id = ?',
+    [status, id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to update status' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ message: 'Status updated successfully' });
+    }
+  );
+});
+
 // Get all user applications
 router.get('/applications', (req, res) => {
   db.all(

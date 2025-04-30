@@ -52,6 +52,31 @@
   box-shadow: 0 0 0 3px rgba(71, 79, 160, 0.1);
 }
 
+.passwordInputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInputContainer input {
+  padding-right: 4rem;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.togglePassword:hover {
+  color: #333;
+}
+
 .submitButton {
   width: 100%;
   padding: 1rem;
@@ -68,6 +93,11 @@
 .submitButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(71, 79, 160, 0.3);
+}
+
+.submitButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .authLink {
