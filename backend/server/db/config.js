@@ -11,63 +11,63 @@ const sampleApplications = [
   {
     full_name: 'Rameshwar Prasad Yadav',
     business_type: 'General Store',
-    loan_amount: 500000,
+    loan_amount: 50000,
     risk_score: 75,
     application_status: 'PENDING'
   },
   {
     full_name: 'Lakshmi Bai Sharma',
     business_type: 'Beauty Parlor',
-    loan_amount: 750000,
+    loan_amount: 75000,
     risk_score: 82,
     application_status: 'ACCEPTED'
   },
   {
     full_name: 'Harishchandra Patel',
     business_type: 'Auto Workshop',
-    loan_amount: 1000000,
+    loan_amount: 100000,
     risk_score: 65,
     application_status: 'PENDING'
   },
   {
     full_name: 'Saraswati Devi Gupta',
     business_type: 'Boutique',
-    loan_amount: 600000,
+    loan_amount: 60000,
     risk_score: 78,
     application_status: 'ACCEPTED'
   },
   {
     full_name: 'Brijesh Singh Rathore',
     business_type: 'Dhaba',
-    loan_amount: 1500000,
+    loan_amount: 150000,
     risk_score: 70,
     application_status: 'PENDING'
   },
   {
     full_name: 'Kamala Bai Reddy',
     business_type: 'Medical Store',
-    loan_amount: 800000,
+    loan_amount: 80000,
     risk_score: 85,
     application_status: 'ACCEPTED'
   },
   {
     full_name: 'Ganesh Prasad Mehta',
     business_type: 'Mobile Repair',
-    loan_amount: 400000,
+    loan_amount: 40000,
     risk_score: 72,
     application_status: 'PENDING'
   },
   {
     full_name: 'Radha Bai Joshi',
     business_type: 'Day Care',
-    loan_amount: 900000,
+    loan_amount: 90000,
     risk_score: 80,
     application_status: 'ACCEPTED'
   },
   {
     full_name: 'Krishna Kumar Malhotra',
     business_type: 'Gym',
-    loan_amount: 1200000,
+    loan_amount: 120000,
     risk_score: 68,
     application_status: 'PENDING'
   },
@@ -81,21 +81,21 @@ const sampleApplications = [
   {
     full_name: 'Mohan Lal Verma',
     business_type: 'Photo Studio',
-    loan_amount: 700000,
+    loan_amount: 70000,
     risk_score: 75,
     application_status: 'PENDING'
   },
   {
     full_name: 'Ganga Bai Choudhary',
     business_type: 'Sweet Shop',
-    loan_amount: 650000,
+    loan_amount: 65000,
     risk_score: 82,
     application_status: 'ACCEPTED'
   },
   {
     full_name: 'Vishnu Prasad Agarwal',
     business_type: 'Electronics Shop',
-    loan_amount: 1100000,
+    loan_amount: 110000,
     risk_score: 70,
     application_status: 'PENDING'
   },

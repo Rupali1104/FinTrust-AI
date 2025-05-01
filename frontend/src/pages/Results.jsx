@@ -27,11 +27,11 @@ const Results = () => {
     const generateRandomResults = () => {
       const creditScore = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
       const annualRevenue = Math.floor(Math.random() * (400000 - 100000 + 1)) + 100000;
-      const loanAmount = Math.floor(Math.random() * (400000 - 100000 + 1)) + 100000;
+      const loanAmount = Math.floor(Math.random() * (200000 - 100000 + 1)) + 10000;
       
       return {
         business_name: "Sample Business",
-        business_type: "Small Enterprise",
+        business_type: "Nano Enterprise",
         annual_revenue: annualRevenue,
         loan_amount: loanAmount,
         loan_purpose: "Business Expansion",
@@ -73,10 +73,10 @@ const Results = () => {
           }
           const score = context.dataIndex === 0 ? results.credit_score : 0;
           const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-          if (score <= 30) {
+          if (score <= 50) {
             gradient.addColorStop(0, '#e74c3c');
             gradient.addColorStop(1, '#f39c12');
-          } else if (score <= 70) {
+          } else if (score <= 75) {
             gradient.addColorStop(0, '#f39c12');
             gradient.addColorStop(1, '#2ecc71');
           } else {
@@ -109,10 +109,10 @@ const Results = () => {
   const generateFeedback = () => {
     const feedback = [
       "Based on your application, here are some recommendations:",
-      "1. Consider increasing your annual revenue",
+      "1. Consider increasing your annual income",
       "2. Maintain a consistent business growth rate",
-      "3. Reduce outstanding debts if any",
-      "4. Build a longer credit history",
+      "3. Reduce previous debts & unwanted expenses",
+      "4. Cut down on unnecessary expenses",
       "5. Consider diversifying your income sources"
     ];
     return feedback;

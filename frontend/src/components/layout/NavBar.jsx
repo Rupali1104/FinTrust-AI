@@ -86,12 +86,12 @@ const Navbar = () => {
           </ul>
 
           <div className="auth-buttons">
-            <Link to="/login" className="navbtn navbtn-border">
-              Login
+            <Link to="/login" className="navbtn navbtn-gradient">
+              Bank View Login
             </Link>
-            <Link to="/register" className="navbtn navbtn-gradient">
+            {/* <Link to="/register" className="navbtn navbtn-gradient">
               Create Account
-            </Link>
+            </Link> */}
           </div>
 
           <div className="mobile-menu">
