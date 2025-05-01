@@ -9,7 +9,7 @@ import Register from "./pages/Register";
 import { Dashboard } from "./pages/Dashboard";
 import Results from './pages/Results';
 import { Footer } from "./components/layout/Footer";
-import Admin from './pages/Admin';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/results" element={<Results />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
         {/* Routes with Navbar and Footer */}
         <Route path="/" element={

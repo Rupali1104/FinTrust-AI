@@ -116,11 +116,11 @@ const Navbar = () => {
             </ul>
             <div className="drawer-buttons">
               <Link to="/login" className="navbtn navbtn-border">
-                Login
+                Bank Login
               </Link>
-              <Link to="/register" className="navbtn navbtn-gradient">
+              {/* <Link to="/register" className="navbtn navbtn-gradient">
                 Create Account
-              </Link>
+              </Link> */}
             </div>
           </div>
         )}

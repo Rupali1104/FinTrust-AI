@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend server for FinTrust-AI",
   "main": "server/server.js",
-  "type": "module",
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/index.js",

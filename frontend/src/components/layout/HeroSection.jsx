@@ -36,12 +36,10 @@ export const HeroSection = () => {
         </p>
 
         <div className="cta-buttons">
-          <a href="/services" className="btn btn-gradient">
-            Learn More
+          <a href="/dashboard" className="btn btn-gradient">
+            Get Started Now
           </a>
-          <a href="/contact" className="btn btn-border">
-            Contact Us
-          </a>
+          
         </div>
       </section>
 

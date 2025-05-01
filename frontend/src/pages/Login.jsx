@@ -17,18 +17,19 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post('http://localhost:5000/api/admin/login', {
         email,
         password
       });
 
-      // Store token and user info
+      // Store token and admin info
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('admin', JSON.stringify(response.data.admin));
 
-      // Navigate based on user role
-      navigate(response.data.redirectPath);
+      // Navigate to admin dashboard
+      navigate('/admin/dashboard');
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.response?.data?.error || "Invalid email or password");
     } finally {
       setIsLoading(false);
@@ -42,7 +43,7 @@ function Login() {
   return (
     <div className={styles.authContainer}>
       <form onSubmit={handleSubmit} className={styles.authForm}>
-        <h2 className={styles.authTitle}>Welcome Back</h2>
+        <h2 className={styles.authTitle}>Admin Login</h2>
         
         <div className={styles.formGroup}>
           <label htmlFor="email">Email</label>
@@ -52,7 +53,7 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Enter your email"
+            placeholder="Enter admin email"
           />
         </div>
 
@@ -65,7 +66,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter your password"
+              placeholder="Enter admin password"
             />
             <button
               type="button"
@@ -84,11 +85,11 @@ function Login() {
           className={styles.submitButton}
           disabled={isLoading}
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? 'Logging in...' : 'Login as Admin'}
         </button>
 
         <div className={styles.authLink}>
-          Don't have an account? <a href="/register">Register</a>
+          Looking to apply for a loan? <a href="/">Go to Application</a>
         </div>
       </form>
     </div>
