@@ -60,24 +60,12 @@ npm install
 cd backend
 npm start
 ```
-The server will start on http://localhost:5000
 
 2. Start the frontend development server:
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
-The frontend will start on http://localhost:3000
-
-## Default Credentials
-
-### Admin Account
-- Email: admin@fintrust.com
-- Password: admin123
-
-### User Accounts
-- Email: user1@example.com to user15@example.com
-- Password: password123
 
 ## Project Structure
 
@@ -100,23 +88,6 @@ FinTrust-AI/
 │   └── package.json
 └── README.md
 ```
-
-## API Endpoints
-
-### Authentication
-- POST /api/auth/register - Register a new user
-- POST /api/auth/login - Login user
-
-### User Routes
-- GET /api/user/profile - Get user profile
-- POST /api/user/details - Submit user details
-
-### Results
-- GET /api/results - Get user's loan application results
-
-### Admin Routes
-- GET /api/admin/users - Get all users (admin only)
-- PUT /api/admin/users/:id/status - Update user status (admin only)
 
 ## Database
 
