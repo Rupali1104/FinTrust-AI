@@ -10,7 +10,7 @@ import requests
 from google.cloud import vision
 
 # Set environment variable for Google Vision API
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "vision_key.json"  # Update with your actual path
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")  # Update with your actual path
 
 # Initialize Google Vision client
 client = vision.ImageAnnotatorClient()
