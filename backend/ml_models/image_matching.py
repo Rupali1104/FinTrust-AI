@@ -41,7 +41,7 @@ shop_name = lines[0] if len(lines) > 0 else ""
 location = lines[1] if len(lines) > 1 else ""
 
 # Google Maps Places API setup
-API_KEY = "AIzaSyBwbSgdAfUSoXb2tkt6pDmT5mOPh5vNzTQ"  # Replace with your API key
+API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")  # Replace with your API key
 query = f"{shop_name} in {location}"
 url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={query}&key={API_KEY}"
 
