@@ -77,3 +77,6 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
+
+.env
+vision_key.json
