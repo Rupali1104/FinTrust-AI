@@ -1,0 +1,179 @@
+.accepted {
+  color: #ffffff;
+  font-weight: 600;
+  background-color: #2ecc71;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+  box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+  transition: all 0.3s ease;
+}
+
+.accepted:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(46, 204, 113, 0.3);
+}
+
+.rejected {
+  color: #ffffff;
+  font-weight: 600;
+  background-color: #e74c3c;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
+  transition: all 0.3s ease;
+}
+
+.rejected:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(231, 76, 60, 0.3);
+}
+
+/* Add styles for the status column header */
+.statusHeader {
+  text-align: center;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 12px;
+}
+
+/* Add styles for the status cell */
+.statusCell {
+  text-align: center;
+  padding: 12px;
+}
+
+.tableContainer {
+  width: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: auto;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f8f9fa;
+}
+
+.tableContainer::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: white;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #e9ecef;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #e9ecef;
+  white-space: nowrap;
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.table th:first-child,
+.table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 2;
+  min-width: 60px;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.table th:first-child {
+  z-index: 11;
+  background-color: #f8f9fa;
+}
+
+.table tr:hover td:first-child {
+  background-color: #f8f9fa;
+}
+
+.table tbody {
+  position: relative;
+}
+
+.feedbackPositive {
+  display: inline-block;
+  background: linear-gradient(90deg, #e8f9f1 0%, #d4f5e9 100%);
+  color: #219150;
+  border: 2px solid #27ae60;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.10);
+  cursor: default;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, border 0.2s;
+}
+
+.feedbackNegative {
+  display: inline-block;
+  background: linear-gradient(90deg, #fdeaea 0%, #f9d6d5 100%);
+  color: #c0392b;
+  border: 2px solid #e74c3c;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.10);
+  cursor: default;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, border 0.2s;
+}
+
+.feedbackPending {
+  display: inline-block;
+  background: linear-gradient(90deg, #fffbe6 0%, #fff3cd 100%);
+  color: #b8860b;
+  border: 2px solid #ffc107;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.10);
+  cursor: default;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, border 0.2s;
+} 

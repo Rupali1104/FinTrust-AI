@@ -44,7 +44,33 @@
   border-color: #646cff;
 }
 
-button {
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  padding-right: 4rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: #333;
+}
+
+button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
   background-color: #646cff;
@@ -56,11 +82,11 @@ button {
   transition: background-color 0.2s;
 }
 
-button:hover {
+button[type="submit"]:hover {
   background-color: #535bf2;
 }
 
-button:disabled {
+button[type="submit"]:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }

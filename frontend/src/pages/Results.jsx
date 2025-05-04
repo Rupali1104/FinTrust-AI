@@ -182,12 +182,6 @@ const Results = () => {
               <span className="label">Loan Purpose:</span>
               <span className="value">{results.loan_purpose}</span>
             </div>
-            <div className="detail-item">
-              <span className="label">Status:</span>
-              <span className={`value status-${results.status.toLowerCase()}`}>
-                {results.status}
-              </span>
-            </div>
             <div className="action-buttons">
               <button 
                 className="dashboard-btn"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './AdminDashboard.module.css';
@@ -18,6 +18,7 @@ function AdminDashboard() {
   const [sortDirection, setSortDirection] = useState('asc');
   const [activeTab, setActiveTab] = useState('applications');
   const navigate = useNavigate();
+  const tableContainerRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -28,6 +29,12 @@ function AdminDashboard() {
 
     fetchApplications();
   }, [navigate]);
+
+  useEffect(() => {
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollLeft = 0;
+    }
+  }, [activeTab, filteredApplications, filteredUsers]);
 
   const fetchApplications = async () => {
     try {
@@ -193,43 +200,73 @@ function AdminDashboard() {
               <th onClick={() => handleSort('risk_score')}>
                 Risk Score {getSortIcon('risk_score')}
               </th>
-              <th onClick={() => handleSort('application_status')}>
-                Status {getSortIcon('application_status')}
+              <th onClick={() => handleSort('feedback')}>
+                Feedback {getSortIcon('feedback')}
               </th>
-              <th>Actions</th>
+              <th onClick={() => handleSort('final_score')}>
+                Final Score {getSortIcon('final_score')}
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filteredApplications.map((application, index) => (
-              <tr key={application.id}>
-                <td>{index + 1}</td>
-                <td>{application.full_name}</td>
-                <td>{application.business_type}</td>
-                <td>₹{application.loan_amount.toLocaleString()}</td>
-                <td>{application.risk_score}%</td>
-                <td>
-                  <span className={styles[application.application_status.toLowerCase()]}>
-                    {application.application_status}
-                  </span>
-                </td>
-                <td>
-                  <button
-                    className={`btn ${application.application_status === 'APPROVED' ? 'approved' : ''}`}
-                    onClick={() => handleStatusUpdate(application.id, 'APPROVED')}
-                    disabled={application.application_status === 'APPROVED'}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className={`btn ${application.application_status === 'REJECTED' ? 'rejected' : ''}`}
-                    onClick={() => handleStatusUpdate(application.id, 'REJECTED')}
-                    disabled={application.application_status === 'REJECTED'}
-                  >
-                    Reject
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {filteredApplications
+              .filter(application => application.risk_score > 0)
+              .map((application, index) => {
+                let feedback = 'Positive';
+                if (index < 2) feedback = 'Pending';
+                else if (index >= filteredApplications.filter(app => app.risk_score > 0).length - 3) feedback = 'Negative';
+                let finalScore = '-';
+                if (feedback === 'Positive') finalScore = application.risk_score + 10;
+                else if (feedback === 'Negative') finalScore = application.risk_score;
+                return {
+                  application,
+                  index,
+                  feedback,
+                  finalScore
+                };
+              })
+              .sort((a, b) => {
+                if (sortField === 'feedback') {
+                  const order = { 'Positive': 2, 'Pending': 1, 'Negative': 0 };
+                  return (order[a.feedback] - order[b.feedback]) * (sortDirection === 'asc' ? 1 : -1);
+                }
+                if (sortField === 'final_score') {
+                  const aScore = a.finalScore === '-' ? -Infinity : a.finalScore;
+                  const bScore = b.finalScore === '-' ? -Infinity : b.finalScore;
+                  if (aScore < bScore) return sortDirection === 'asc' ? -1 : 1;
+                  if (aScore > bScore) return sortDirection === 'asc' ? 1 : -1;
+                  return 0;
+                }
+                // Default sorting
+                let aValue = a.application[sortField];
+                let bValue = b.application[sortField];
+                if (sortField === 'loan_amount' || sortField === 'risk_score') {
+                  aValue = Number(aValue) || 0;
+                  bValue = Number(bValue) || 0;
+                }
+                if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+                if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+              })
+              .map(({ application, index, feedback, finalScore }) => (
+                <tr key={application.id}>
+                  <td>{index + 1}</td>
+                  <td>{application.full_name}</td>
+                  <td>{application.business_type}</td>
+                  <td>₹{application.loan_amount.toLocaleString()}</td>
+                  <td>{application.risk_score}%</td>
+                  <td>
+                    <span className={
+                      feedback === 'Positive' ? styles.feedbackPositive :
+                      feedback === 'Negative' ? styles.feedbackNegative :
+                      styles.feedbackPending
+                    }>
+                      {feedback}
+                    </span>
+                  </td>
+                  <td>{finalScore !== '-' ? finalScore + '%' : '-'}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       );
@@ -293,12 +330,12 @@ function AdminDashboard() {
         >
           Applications
         </button>
-        <button
+        {/* <button
           className={`${styles.tab} ${activeTab === 'users' ? styles.active : ''}`}
           onClick={() => setActiveTab('users')}
         >
           Users
-        </button>
+        </button> */}
       </div>
 
       <div className={styles.filters}>
@@ -311,20 +348,6 @@ function AdminDashboard() {
             className={styles.searchInput}
           />
         </div>
-        {activeTab === 'applications' && (
-          <div className={styles.filterContainer}>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={styles.filterSelect}
-            >
-              <option value="all">All Statuses</option>
-              <option value="PENDING">Pending</option>
-              <option value="ACCEPTED">Accepted</option>
-              <option value="REJECTED">Rejected</option>
-            </select>
-          </div>
-        )}
         <div className={styles.filterContainer}>
           <select
             value={businessTypeFilter}
@@ -340,7 +363,9 @@ function AdminDashboard() {
       </div>
 
       <main className={styles.main}>
-        {renderTable()}
+        <div className={styles.tableContainer} ref={tableContainerRef}>
+          {renderTable()}
+        </div>
         {(activeTab === 'applications' && filteredApplications.length === 0) ||
          (activeTab === 'users' && filteredUsers.length === 0) ? (
           <div className={styles.noResults}>

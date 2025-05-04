@@ -27,6 +27,7 @@ export const Dashboard = () => {
     loan_amount: '',
     risk_score: 0
   });
+  const [validationError, setValidationError] = useState("");
   const navigate = useNavigate();
 
   const steps = [
@@ -96,6 +97,32 @@ export const Dashboard = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Validation function for required fields per step
+  const isStepValid = () => {
+    if (currentStep === 1) {
+      return (
+        formData.fullName.trim() !== "" &&
+        formData.email.trim() !== "" &&
+        formData.phoneNumber.trim() !== ""
+      );
+    }
+    if (currentStep === 2) {
+      return (
+        formData.businessName.trim() !== "" &&
+        formData.businessType.trim() !== "" &&
+        formData.yearsInBusiness.trim() !== ""
+      );
+    }
+    if (currentStep === 5) {
+      return (
+        formData.loanType.trim() !== "" &&
+        formData.loanAmount !== "" &&
+        formData.annualIncome !== ""
+      );
+    }
+    return true;
   };
 
   const renderStepContent = () => {
@@ -197,7 +224,23 @@ export const Dashboard = () => {
                 multiple
                 className="upload-input"
               />
+              <input
+                type="file"
+                multiple
+                className="upload-input"
+              />
+              <input
+                type="file"
+                multiple
+                className="upload-input"
+              />
+              <input
+                type="file"
+                multiple
+                className="upload-input"
+              />
             </div>
+            
           </div>
         );
       case 4:
@@ -381,6 +424,9 @@ export const Dashboard = () => {
           ) : (
             renderStepContent()
           )}
+          {validationError && (
+            <div style={{ color: 'red', marginTop: 10 }}>{validationError}</div>
+          )}
         </div>
 
         {/* Navigation Buttons */}
@@ -388,14 +434,22 @@ export const Dashboard = () => {
           <button
             className="prev-btn"
             disabled={currentStep === 1 || isLoading}
-            onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
+            onClick={() => {
+              setValidationError("");
+              setCurrentStep((prev) => Math.max(prev - 1, 1));
+            }}
           >
             Previous
           </button>
           <button 
             className="btn"
-            disabled={isLoading}
+            disabled={isLoading || !isStepValid()}
             onClick={(e) => {
+              setValidationError("");
+              if (!isStepValid()) {
+                setValidationError("Please fill all required fields to proceed.");
+                return;
+              }
               if (currentStep === steps.length) {
                 handleSubmit(e);
               } else {
