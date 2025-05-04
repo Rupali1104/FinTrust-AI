@@ -7,61 +7,59 @@ const jwt = require('jsonwebtoken');
 
 // Admin login
 router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    
     try {
-        const { email, password } = req.body;
+        const admin = await new Promise((resolve, reject) => {
+            db.get('SELECT * FROM admins WHERE email = ?', [email], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
 
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+        if (!admin) {
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        console.log('Attempting admin login for:', email);
-        
-        db.get('SELECT * FROM admins WHERE email = ?', [email], async (err, admin) => {
-            if (err) {
-                console.error('Database error during login:', err);
-                return res.status(500).json({ error: 'Internal server error' });
-            }
+        const validPassword = await bcrypt.compare(password, admin.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
 
-            if (!admin) {
-                console.log('Login failed: Admin not found');
-                return res.status(401).json({ error: 'Invalid credentials' });
-            }
-
-            try {
-                const validPassword = await bcrypt.compare(password, admin.password_hash);
-                if (!validPassword) {
-                    console.log('Login failed: Invalid password');
-                    return res.status(401).json({ error: 'Invalid credentials' });
-                }
-
-                const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET || 'your-secret-key');
-                console.log('Login successful for:', email);
-                res.json({ 
-                    token,
-                    message: 'Login successful',
-                    admin: {
-                        id: admin.id,
-                        email: admin.email
-                    }
-                });
-            } catch (err) {
-                console.error('Error comparing passwords:', err);
-                return res.status(500).json({ error: 'Internal server error' });
-            }
-        });
+        const token = jwt.sign({ id: admin.id, email: admin.email }, 'your-secret-key', { expiresIn: '1h' });
+        res.json({ token });
     } catch (err) {
-        console.error('Unexpected error during login:', err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Login error:', err);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
-// Get all applications
-router.get('/applications', authenticateAdmin, (req, res) => {
-    db.all('SELECT * FROM applications ORDER BY created_at DESC', (err, applications) => {
+// Get all applications with approval/rejection status
+router.get('/applications', (req, res) => {
+    db.all('SELECT * FROM applications ORDER BY created_at DESC', [], (err, rows) => {
         if (err) {
-            return res.status(500).json({ error: 'Error fetching applications' });
+            console.error('Error fetching applications:', err);
+            return res.status(500).json({ error: 'Failed to fetch applications' });
         }
+        
+        // Add approval status based on risk score
+        const applications = rows.map(app => ({
+            ...app,
+            status: app.risk_score >= 75 ? 'APPROVED' : 'REJECTED'
+        }));
+        
         res.json(applications);
+    });
+});
+
+// Get all users
+router.get('/users', (req, res) => {
+    db.all('SELECT * FROM users ORDER BY created_at DESC', [], (err, rows) => {
+        if (err) {
+            console.error('Error fetching users:', err);
+            return res.status(500).json({ error: 'Failed to fetch users' });
+        }
+        res.json(rows);
     });
 });
 
@@ -84,28 +82,23 @@ router.get('/applications/:id', authenticateAdmin, (req, res) => {
     });
 });
 
-// Update application status (only accept or reject)
-router.put('/applications/:id/status', authenticateAdmin, (req, res) => {
+// Update application status
+router.put('/applications/:id', (req, res) => {
     const { id } = req.params;
-    const { status, notes } = req.body;
+    const { status } = req.body;
 
-    if (status !== 'accepted' && status !== 'rejected') {
-        return res.status(400).json({ error: 'Status must be either "accepted" or "rejected"' });
+    if (!['APPROVED', 'REJECTED'].includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
     }
 
-    db.run('UPDATE applications SET application_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-        [status, id], (err) => {
+    db.run('UPDATE applications SET application_status = ? WHERE id = ?',
+        [status, id],
+        function(err) {
             if (err) {
-                return res.status(500).json({ error: 'Error updating application status' });
+                console.error('Error updating application:', err);
+                return res.status(500).json({ error: 'Failed to update application' });
             }
-
-            db.run('INSERT INTO application_history (application_id, status, notes, admin_id) VALUES (?, ?, ?, ?)',
-                [id, status, notes, req.admin.id], (err) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Error saving application history' });
-                    }
-                    res.json({ message: 'Application status updated successfully' });
-                });
+            res.json({ message: 'Application status updated successfully' });
         });
 });
 

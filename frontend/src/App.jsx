@@ -10,6 +10,7 @@ import { Dashboard } from "./pages/Dashboard";
 import Results from './pages/Results';
 import { Footer } from "./components/layout/Footer";
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
         {/* Routes with Navbar and Footer */}

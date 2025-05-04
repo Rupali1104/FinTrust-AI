@@ -4,7 +4,76 @@ const bcrypt = require('bcrypt');
 const fs = require('fs');
 
 const dbPath = path.join(__dirname, 'fintrust.db');
-const db = new sqlite3.Database(dbPath);
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error('Error opening database:', err);
+    } else {
+        console.log('Connected to the SQLite database');
+    }
+});
+
+// Initialize database tables if they don't exist
+db.serialize(() => {
+    // Create users table
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        business_type TEXT,
+        credit_score INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    // Create applications table
+    db.run(`CREATE TABLE IF NOT EXISTS applications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        business_type TEXT NOT NULL,
+        loan_amount REAL NOT NULL,
+        risk_score INTEGER NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    // Create admins table
+    db.run(`CREATE TABLE IF NOT EXISTS admins (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+
+    // Create default admin if not exists
+    const defaultAdmin = {
+        email: 'admin@fintrust.com',
+        password: 'admin123'
+    };
+
+    db.get('SELECT * FROM admins WHERE email = ?', [defaultAdmin.email], async (err, row) => {
+        if (err) {
+            console.error('Error checking for default admin:', err);
+            return;
+        }
+
+        if (!row) {
+            try {
+                const hash = await bcrypt.hash(defaultAdmin.password, 10);
+                db.run('INSERT INTO admins (email, password_hash) VALUES (?, ?)',
+                    [defaultAdmin.email, hash],
+                    (err) => {
+                        if (err) {
+                            console.error('Error creating default admin:', err);
+                        } else {
+                            console.log('Default admin user created');
+                            console.log('Email:', defaultAdmin.email);
+                            console.log('Password:', defaultAdmin.password);
+                        }
+                    });
+            } catch (err) {
+                console.error('Error hashing password:', err);
+            }
+        }
+    });
+});
 
 // Sample loan applications data with Indian context
 const sampleApplications = [

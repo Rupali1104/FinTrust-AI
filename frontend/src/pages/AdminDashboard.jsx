@@ -6,7 +6,9 @@ import Navbar from '../components/layout/NavBar';
 
 function AdminDashboard() {
   const [applications, setApplications] = useState([]);
+  const [users, setUsers] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,78 +16,113 @@ function AdminDashboard() {
   const [businessTypeFilter, setBusinessTypeFilter] = useState('all');
   const [sortField, setSortField] = useState('full_name');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [activeTab, setActiveTab] = useState('applications');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('adminToken');
     if (!token) {
-      navigate('/login');
+      navigate('/admin/login');
       return;
     }
-
-    const fetchApplications = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/admin/applications', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        setApplications(response.data);
-        setFilteredApplications(response.data);
-      } catch (err) {
-        console.error('Error fetching applications:', err);
-        setError('Failed to load applications');
-        if (err.response?.status === 401) {
-          navigate('/login');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchApplications();
   }, [navigate]);
 
+  const fetchApplications = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const [applicationsResponse, usersResponse] = await Promise.all([
+        axios.get('http://localhost:5000/api/admin/applications', {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get('http://localhost:5000/api/users', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ]);
+      
+      setApplications(applicationsResponse.data);
+      setFilteredApplications(applicationsResponse.data);
+      setUsers(usersResponse.data);
+      setFilteredUsers(usersResponse.data);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Failed to load data');
+      if (err.response?.status === 401) {
+        navigate('/login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let filtered = [...applications];
+    if (activeTab === 'applications') {
+      let filtered = [...applications];
 
-    // Apply search filter
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(app => 
-        app.full_name.toLowerCase().includes(searchLower) ||
-        app.business_type.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Apply status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(app => app.application_status === statusFilter);
-    }
-
-    // Apply business type filter
-    if (businessTypeFilter !== 'all') {
-      filtered = filtered.filter(app => app.business_type === businessTypeFilter);
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let aValue = a[sortField];
-      let bValue = b[sortField];
-
-      // Handle numeric fields
-      if (sortField === 'loan_amount' || sortField === 'risk_score') {
-        aValue = Number(aValue) || 0;
-        bValue = Number(bValue) || 0;
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        filtered = filtered.filter(app => 
+          app.full_name.toLowerCase().includes(searchLower) ||
+          app.business_type.toLowerCase().includes(searchLower)
+        );
       }
 
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
+      if (statusFilter !== 'all') {
+        filtered = filtered.filter(app => app.application_status === statusFilter);
+      }
 
-    setFilteredApplications(filtered);
-  }, [applications, searchTerm, statusFilter, businessTypeFilter, sortField, sortDirection]);
+      if (businessTypeFilter !== 'all') {
+        filtered = filtered.filter(app => app.business_type === businessTypeFilter);
+      }
+
+      filtered.sort((a, b) => {
+        let aValue = a[sortField];
+        let bValue = b[sortField];
+
+        if (sortField === 'loan_amount' || sortField === 'risk_score') {
+          aValue = Number(aValue) || 0;
+          bValue = Number(bValue) || 0;
+        }
+
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      setFilteredApplications(filtered);
+    } else {
+      let filtered = [...users];
+
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        filtered = filtered.filter(user => 
+          user.full_name.toLowerCase().includes(searchLower) ||
+          user.business_type.toLowerCase().includes(searchLower)
+        );
+      }
+
+      if (businessTypeFilter !== 'all') {
+        filtered = filtered.filter(user => user.business_type === businessTypeFilter);
+      }
+
+      filtered.sort((a, b) => {
+        let aValue = a[sortField];
+        let bValue = b[sortField];
+
+        if (sortField === 'credit_score') {
+          aValue = Number(aValue) || 0;
+          bValue = Number(bValue) || 0;
+        }
+
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      setFilteredUsers(filtered);
+    }
+  }, [applications, users, searchTerm, statusFilter, businessTypeFilter, sortField, sortDirection, activeTab]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -123,56 +160,23 @@ function AdminDashboard() {
     }
   };
 
-  if (loading) return <div className={styles.loading}>Loading...</div>;
-  if (error) return <div className={styles.error}>{error}</div>;
+  const handleStatusUpdate = async (id, status) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      await axios.put(`http://localhost:5000/api/admin/applications/${id}`, 
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      fetchApplications(); // Refresh the list
+    } catch (err) {
+      console.error('Error updating status:', err);
+      setError('Failed to update application status');
+    }
+  };
 
-  return (
-    <div className={styles.dashboard}>
-      <header className={styles.header}>
-        <div className={styles.brand}>FinTrustAI</div>
-        <h1>Admin Dashboard</h1>
-        <button onClick={handleLogout} className={styles.logoutButton}>
-          Logout
-        </button>
-      </header>
-
-      <div className={styles.filters}>
-        <div className={styles.searchContainer}>
-          <input
-            type="text"
-            placeholder="Search by name or business type..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
-        <div className={styles.filterContainer}>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Statuses</option>
-            <option value="PENDING">Pending</option>
-            <option value="ACCEPTED">Accepted</option>
-            <option value="REJECTED">Rejected</option>
-          </select>
-        </div>
-        <div className={styles.filterContainer}>
-          <select
-            value={businessTypeFilter}
-            onChange={(e) => setBusinessTypeFilter(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">All Business Types</option>
-            {getUniqueBusinessTypes().map(type => (
-              <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <main className={styles.main}>
+  const renderTable = () => {
+    if (activeTab === 'applications') {
+      return (
         <table className={styles.table}>
           <thead>
             <tr>
@@ -192,6 +196,7 @@ function AdminDashboard() {
               <th onClick={() => handleSort('application_status')}>
                 Status {getSortIcon('application_status')}
               </th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -207,15 +212,141 @@ function AdminDashboard() {
                     {application.application_status}
                   </span>
                 </td>
+                <td>
+                  <button
+                    className={`btn ${application.application_status === 'APPROVED' ? 'approved' : ''}`}
+                    onClick={() => handleStatusUpdate(application.id, 'APPROVED')}
+                    disabled={application.application_status === 'APPROVED'}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className={`btn ${application.application_status === 'REJECTED' ? 'rejected' : ''}`}
+                    onClick={() => handleStatusUpdate(application.id, 'REJECTED')}
+                    disabled={application.application_status === 'REJECTED'}
+                  >
+                    Reject
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {filteredApplications.length === 0 && (
-          <div className={styles.noResults}>
-            No applications found matching your criteria.
+      );
+    } else {
+      return (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th onClick={() => handleSort('full_name')}>
+                Name {getSortIcon('full_name')}
+              </th>
+              <th onClick={() => handleSort('email')}>
+                Email {getSortIcon('email')}
+              </th>
+              <th onClick={() => handleSort('business_type')}>
+                Business Type {getSortIcon('business_type')}
+              </th>
+              <th onClick={() => handleSort('credit_score')}>
+                Credit Score {getSortIcon('credit_score')}
+              </th>
+              <th onClick={() => handleSort('created_at')}>
+                Registered On {getSortIcon('created_at')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map((user, index) => (
+              <tr key={user.id}>
+                <td>{index + 1}</td>
+                <td>{user.full_name}</td>
+                <td>{user.email}</td>
+                <td>{user.business_type}</td>
+                <td>{user.credit_score}</td>
+                <td>{new Date(user.created_at).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      );
+    }
+  };
+
+  if (loading) return <div className={styles.loading}>Loading...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
+
+  return (
+    <div className={styles.dashboard}>
+      <header className={styles.header}>
+        <div className={styles.brand}>FinTrustAI</div>
+        <h1>Admin Dashboard</h1>
+        <button onClick={handleLogout} className={styles.logoutButton}>
+          Logout
+        </button>
+      </header>
+
+      <div className={styles.tabs}>
+        <button
+          className={`${styles.tab} ${activeTab === 'applications' ? styles.active : ''}`}
+          onClick={() => setActiveTab('applications')}
+        >
+          Applications
+        </button>
+        <button
+          className={`${styles.tab} ${activeTab === 'users' ? styles.active : ''}`}
+          onClick={() => setActiveTab('users')}
+        >
+          Users
+        </button>
+      </div>
+
+      <div className={styles.filters}>
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            placeholder={`Search by ${activeTab === 'applications' ? 'name or business type' : 'name, email or business type'}...`}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+        {activeTab === 'applications' && (
+          <div className={styles.filterContainer}>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">All Statuses</option>
+              <option value="PENDING">Pending</option>
+              <option value="ACCEPTED">Accepted</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
           </div>
         )}
+        <div className={styles.filterContainer}>
+          <select
+            value={businessTypeFilter}
+            onChange={(e) => setBusinessTypeFilter(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">All Business Types</option>
+            {getUniqueBusinessTypes().map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <main className={styles.main}>
+        {renderTable()}
+        {(activeTab === 'applications' && filteredApplications.length === 0) ||
+         (activeTab === 'users' && filteredUsers.length === 0) ? (
+          <div className={styles.noResults}>
+            No {activeTab} found matching your criteria.
+          </div>
+        ) : null}
       </main>
     </div>
   );

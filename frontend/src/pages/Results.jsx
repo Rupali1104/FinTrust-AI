@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
 import NavBar from '../components/layout/NavBar';
 import { Footer } from '../components/layout/Footer';
 import '../styles/Results.css';
@@ -21,31 +22,46 @@ const Results = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Generate random results
-    const generateRandomResults = () => {
-      const creditScore = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
-      const annualRevenue = Math.floor(Math.random() * (400000 - 100000 + 1)) + 100000;
-      const loanAmount = Math.floor(Math.random() * (200000 - 100000 + 1)) + 10000;
-      
-      return {
-        business_name: "Sample Business",
-        business_type: "Nano Enterprise",
-        annual_revenue: annualRevenue,
-        loan_amount: loanAmount,
-        loan_purpose: "Business Expansion",
-        credit_score: creditScore,
-        status: creditScore >= 75 ? "APPROVED" : "REJECTED"
-      };
+    const fetchResults = async () => {
+      try {
+        const applicationId = localStorage.getItem('currentApplicationId');
+        const riskScore = localStorage.getItem('currentRiskScore');
+        
+        if (!applicationId || !riskScore) {
+          navigate('/dashboard');
+          return;
+        }
+
+        const response = await axios.get(`http://localhost:5000/api/applications/${applicationId}`);
+        const application = response.data;
+        console.log('Application data:', application);
+
+        // Use the risk score from localStorage
+        const creditScore = parseInt(riskScore);
+        console.log('Credit score:', creditScore);
+
+        setResults({
+          business_name: application.full_name,
+          business_type: application.business_type,
+          annual_revenue: application.loan_amount * 3, // Estimated based on loan amount
+          loan_amount: application.loan_amount,
+          loan_purpose: "Business Expansion",
+          credit_score: creditScore,
+          status: creditScore >= 75 ? "APPROVED" : "REJECTED"
+        });
+      } catch (err) {
+        console.error('Error fetching results:', err);
+        setError('Failed to fetch application results');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    // Simulate loading
-    setTimeout(() => {
-      setResults(generateRandomResults());
-      setLoading(false);
-    }, 1500);
-  }, []);
+    fetchResults();
+  }, [navigate]);
 
   const handlePrint = () => {
     window.print();
@@ -56,6 +72,15 @@ const Results = () => {
       <div className="loading-container">
         <div className="loading-spinner"></div>
         <p>Analyzing your application...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>{error}</p>
+        <button onClick={() => navigate('/dashboard')}>Go to Dashboard</button>
       </div>
     );
   }

@@ -2,11 +2,31 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import { Footer } from "../components/layout/Footer";
+import axios from "axios";
 
 export const Dashboard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    businessType: '',
+    phoneNumber: '',
+    businessName: '',
+    businessSeasonality: '',
+    yearsInBusiness: '',
+    businessDescription: '',
+    loanType: '',
+    loanAmount: '',
+    loanPurpose: '',
+    currentLoanAmount: '',
+    annualIncome: '',
+    full_name: '',
+    business_type: '',
+    loan_amount: '',
+    risk_score: 0
+  });
   const navigate = useNavigate();
 
   const steps = [
@@ -25,29 +45,54 @@ export const Dashboard = () => {
     "Analyzing your application..."
   ];
 
-  const handleFileUpload = (event) => {
-    const files = event.target.files;
-    if (files.length > 0) {
-      console.log("Uploaded files:", files);
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    
-    // Show loading messages at intervals
-    for (let i = 0; i < loadingMessages.length; i++) {
-      setLoadingMessage(loadingMessages[i]);
-      await new Promise(resolve => setTimeout(resolve, 2000));
+  const handleSubmit = async (e) => {
+    console.log('Submit button clicked');
+    if (e) {
+      e.preventDefault();
     }
+    setIsLoading(true);
+    setLoadingMessage('Submitting application...');
+    console.log('Form data:', formData);
 
     try {
-      // Here you would typically make an API call to submit the application
-      // For now, we'll just navigate to the results page
-      navigate("/results");
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('There was an error submitting your application. Please try again.');
+      // Generate random score between 65 and 90
+      const riskScore = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
+      console.log('Generated risk score:', riskScore);
+
+      // Store the risk score in localStorage
+      localStorage.setItem('currentRiskScore', riskScore);
+
+      // Prepare the data in the format expected by the backend
+      const applicationData = {
+        full_name: formData.fullName,
+        business_type: formData.businessType,
+        loan_amount: parseFloat(formData.loanAmount),
+        risk_score: riskScore
+      };
+
+      console.log('Sending data to backend:', applicationData);
+      const response = await axios.post('http://localhost:5000/api/applications', applicationData);
+      console.log('Response from backend:', response.data);
+
+      if (response.data.application_id) {
+        // Store the application ID in localStorage
+        localStorage.setItem('currentApplicationId', response.data.application_id);
+        // Redirect to results page
+        navigate('/results');
+      } else {
+        throw new Error('No application ID received from server');
+      }
+    } catch (err) {
+      console.error('Error submitting application:', err);
+      setLoadingMessage('Failed to submit application. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -62,27 +107,28 @@ export const Dashboard = () => {
             <div className="form-group">
               <input
                 type="text"
-                placeholder="First Name"
+                name="fullName"
+                placeholder="Full Name"
                 className="input"
-                defaultValue=""
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                className="input"
-                defaultValue=""
+                value={formData.fullName}
+                onChange={handleInputChange}
               />
             </div>
             <input
               type="email"
+              name="email"
               placeholder="Email"
               className="input full-width"
-              defaultValue=""
+              value={formData.email}
+              onChange={handleInputChange}
             />
             <input
               type="tel"
+              name="phoneNumber"
               placeholder="Phone Number"
               className="input full-width"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
             />
           </div>
         );
@@ -92,25 +138,45 @@ export const Dashboard = () => {
             <h3>Business Details</h3>
             <input
               type="text"
+              name="businessName"
               placeholder="Business Name"
               className="input full-width"
+              value={formData.businessName}
+              onChange={handleInputChange}
             />
-            <select className="input full-width" defaultValue="">
-              <option value="" disabled>
-                Select Business Seasonality Type
-              </option>
+            <input
+              type="text"
+              name="businessType"
+              placeholder="Business Type"
+              className="input full-width"
+              value={formData.businessType}
+              onChange={handleInputChange}
+            />
+            <select 
+              name="businessSeasonality"
+              className="input full-width"
+              value={formData.businessSeasonality}
+              onChange={handleInputChange}
+            >
+              <option value="" disabled>Select Business Seasonality Type</option>
               <option value="seasonal">Seasonal</option>
               <option value="non-seasonal">Non-Seasonal</option>
               <option value="year-round">Year Round</option>
             </select>
             <input
               type="text"
+              name="yearsInBusiness"
               placeholder="Years in Business"
               className="input full-width"
+              value={formData.yearsInBusiness}
+              onChange={handleInputChange}
             />
             <textarea
+              name="businessDescription"
               placeholder="Business Description"
               className="input full-width"
+              value={formData.businessDescription}
+              onChange={handleInputChange}
             ></textarea>
           </div>
         );
@@ -128,35 +194,10 @@ export const Dashboard = () => {
             <div className="upload-area">
               <input
                 type="file"
-                id="file-upload"
                 multiple
-                onChange={handleFileUpload}
                 className="upload-input"
-              />
-              <input
-                type="file"
-                id="file-upload"
-                multiple
-                onChange={handleFileUpload}
-                className="upload-input"
-              />
-              <input
-                type="file"
-                id="file-upload"
-                multiple
-                onChange={handleFileUpload}
-                className="upload-input"
-              />
-              <input
-                type="url"
-                id="file-upload"
-                multiple
-                onChange={handleFileUpload}
-                className="upload-input"
-                placeholder="Enter business location"
               />
             </div>
-            
           </div>
         );
       case 4:
@@ -166,43 +207,57 @@ export const Dashboard = () => {
             <p>Provide references of credible individuals like landlords & suppliers for verification</p>
             <div className="form-group">
               <p>Person 1:</p>
-            <input
+              <input
                 type="text"
+                name="reference1Name"
                 placeholder="Name"
                 className="input full-width"
-                defaultValue=""
+                value={formData.reference1Name || ''}
+                onChange={handleInputChange}
               />
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              className="input full-width"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="input full-width"
-              defaultValue=""
-            />
+              <input
+                type="tel"
+                name="reference1Phone"
+                placeholder="Phone Number"
+                className="input full-width"
+                value={formData.reference1Phone || ''}
+                onChange={handleInputChange}
+              />
+              <input
+                type="email"
+                name="reference1Email"
+                placeholder="Email"
+                className="input full-width"
+                value={formData.reference1Email || ''}
+                onChange={handleInputChange}
+              />
             </div>
             <div className="form-group">
               <p>Person 2:</p>
-            <input
+              <input
                 type="text"
+                name="reference2Name"
                 placeholder="Name"
                 className="input full-width"
-                defaultValue=""
+                value={formData.reference2Name || ''}
+                onChange={handleInputChange}
               />
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              className="input full-width"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="input full-width"
-              defaultValue=""
-            />
+              <input
+                type="tel"
+                name="reference2Phone"
+                placeholder="Phone Number"
+                className="input full-width"
+                value={formData.reference2Phone || ''}
+                onChange={handleInputChange}
+              />
+              <input
+                type="email"
+                name="reference2Email"
+                placeholder="Email"
+                className="input full-width"
+                value={formData.reference2Email || ''}
+                onChange={handleInputChange}
+              />
             </div>
           </div>
         );
@@ -210,10 +265,13 @@ export const Dashboard = () => {
         return (
           <div>
             <h3>Loan Application</h3>
-            <select className="input full-width" defaultValue="">
-              <option value="" disabled>
-                Select Loan Type
-              </option>
+            <select 
+              name="loanType"
+              className="input full-width"
+              value={formData.loanType}
+              onChange={handleInputChange}
+            >
+              <option value="" disabled>Select Loan Type</option>
               <option value="nano-loan">Nano Business Loan</option>
               <option value="working-capital">Working Capital Loan</option>
               <option value="equipment-financing">Equipment Financing</option>
@@ -222,22 +280,34 @@ export const Dashboard = () => {
             </select>
             <input
               type="number"
+              name="loanAmount"
               placeholder="Requested Amount"
               className="input full-width"
+              value={formData.loanAmount}
+              onChange={handleInputChange}
             />
             <textarea
+              name="loanPurpose"
               placeholder="Loan Purpose"
               className="input full-width"
+              value={formData.loanPurpose}
+              onChange={handleInputChange}
             ></textarea>
             <input
               type="number"
+              name="currentLoanAmount"
               placeholder="Current Loan Amount (if any)"
               className="input full-width"
+              value={formData.currentLoanAmount}
+              onChange={handleInputChange}
             />
             <input
               type="number"
+              name="annualIncome"
               placeholder="Annual Income"
               className="input full-width"
+              value={formData.annualIncome}
+              onChange={handleInputChange}
             />
           </div>
         );
@@ -246,9 +316,22 @@ export const Dashboard = () => {
           <div>
             <h3>Review & Submit</h3>
             <p>Review your application before submitting.</p>
-            {/* <button className="btn" onClick={handleSubmit}>
-              Submit Application
-            </button> */}
+            <div className="review-section">
+              <h4>Personal Information</h4>
+              <p>Name: {formData.fullName}</p>
+              <p>Email: {formData.email}</p>
+              <p>Phone: {formData.phoneNumber}</p>
+
+              <h4>Business Details</h4>
+              <p>Business Name: {formData.businessName}</p>
+              <p>Business Type: {formData.businessType}</p>
+              <p>Years in Business: {formData.yearsInBusiness}</p>
+
+              <h4>Loan Details</h4>
+              <p>Loan Type: {formData.loanType}</p>
+              <p>Loan Amount: ₹{formData.loanAmount}</p>
+              <p>Annual Income: ₹{formData.annualIncome}</p>
+            </div>
           </div>
         );
       default:
@@ -312,9 +395,9 @@ export const Dashboard = () => {
           <button 
             className="btn"
             disabled={isLoading}
-            onClick={() => {
+            onClick={(e) => {
               if (currentStep === steps.length) {
-                handleSubmit();
+                handleSubmit(e);
               } else {
                 setCurrentStep((prev) => Math.min(prev + 1, steps.length));
               }
