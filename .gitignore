@@ -79,4 +79,4 @@ Thumbs.db
 
 
 .env
-vision_key.json
+backend/vision_key.json
