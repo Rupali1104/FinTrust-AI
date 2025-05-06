@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../db/config');
+const { sendReferenceFormEmail } = require('../utils/emailService');
 
 // Helper function to calculate risk score
 const calculateRiskScore = () => {
@@ -10,53 +11,85 @@ const calculateRiskScore = () => {
     return score;
 };
 
-// Create a new application
-router.post('/', (req, res) => {
-    console.log('Received application data:', req.body);
-    
-    const { full_name, business_type, loan_amount } = req.body;
-    
-    if (!full_name || !business_type || !loan_amount) {
-        console.log('Missing required fields:', { full_name, business_type, loan_amount });
+// Submit new application
+router.post('/submit', async (req, res) => {
+    const {
+        full_name,
+        email,
+        phone,
+        income,
+        employment_status,
+        employment_duration,
+        loan_amount,
+        loan_purpose,
+        credit_score,
+        debt_to_income_ratio,
+        collateral_value,
+        bank_account_age,
+        business_type,
+        reference1Email,
+        reference2Email
+    } = req.body;
+
+    // Validate required fields
+    if (!full_name || !email || !reference1Email || !reference2Email) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Calculate risk score
-    const risk_score = calculateRiskScore();
-    console.log('Calculated risk score:', risk_score);
+    try {
+        // Start a transaction
+        db.serialize(() => {
+            db.run('BEGIN TRANSACTION');
 
-    const sql = `INSERT INTO applications 
-                (full_name, business_type, loan_amount, risk_score, application_status) 
-                VALUES (?, ?, ?, ?, ?)`;
-    
-    console.log('Executing SQL:', sql);
-    console.log('With values:', [full_name, business_type, loan_amount, risk_score, 'PENDING']);
-    
-    db.run(sql, 
-        [full_name, business_type, loan_amount, risk_score, 'PENDING'],
-        function(err) {
-            if (err) {
-                console.error('Error creating application:', err);
-                return res.status(500).json({ error: 'Failed to create application' });
-            }
-            
-            console.log('Application created with ID:', this.lastID);
-            
-            // Get the newly created application
-            db.get('SELECT * FROM applications WHERE id = ?', [this.lastID], (err, row) => {
+            // Insert application
+            db.run(`INSERT INTO applications (
+                full_name, email, phone, income, employment_status, employment_duration,
+                loan_amount, loan_purpose, credit_score, debt_to_income_ratio,
+                collateral_value, bank_account_age, business_type, risk_score, application_status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+            [
+                full_name, email, phone, income, employment_status, employment_duration,
+                loan_amount, loan_purpose, credit_score, debt_to_income_ratio,
+                collateral_value, bank_account_age, business_type, credit_score
+            ], async function(err) {
                 if (err) {
-                    console.error('Error fetching new application:', err);
-                    return res.status(500).json({ error: 'Failed to fetch application' });
+                    console.error('Database error:', err);
+                    db.run('ROLLBACK');
+                    return res.status(500).json({ error: 'Error submitting application' });
                 }
-                
-                console.log('Retrieved application from database:', row);
-                res.status(201).json({ 
-                    application_id: row.id,
-                    message: 'Application created successfully',
-                    risk_score: row.risk_score
-                });
+
+                const applicationId = this.lastID;
+
+                // Send emails to references
+                try {
+                    console.log('Sending email to reference 1:', reference1Email);
+                    const email1Sent = await sendReferenceFormEmail(reference1Email, full_name);
+                    
+                    console.log('Sending email to reference 2:', reference2Email);
+                    const email2Sent = await sendReferenceFormEmail(reference2Email, full_name);
+
+                    if (!email1Sent || !email2Sent) {
+                        throw new Error('Failed to send one or more reference emails');
+                    }
+
+                    db.run('COMMIT');
+                    res.json({
+                        id: applicationId,
+                        message: 'Application submitted successfully. Reference forms have been sent.'
+                    });
+                } catch (emailError) {
+                    console.error('Error sending reference emails:', emailError);
+                    db.run('ROLLBACK');
+                    res.status(500).json({ 
+                        error: 'Application submitted but failed to send reference emails. Please try again.'
+                    });
+                }
             });
         });
+    } catch (error) {
+        console.error('Error in application submission:', error);
+        res.status(500).json({ error: 'Server error during application submission' });
+    }
 });
 
 // Get all applications

@@ -63,9 +63,16 @@ export const Dashboard = () => {
     setLoadingMessage('Submitting application...');
     console.log('Form data:', formData);
 
+    // Validate reference emails
+    if (!formData.reference1Email || !formData.reference2Email) {
+      setValidationError("Please provide both reference email addresses");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Generate random score between 65 and 90
-      const riskScore = Math.floor(Math.random() * (90 - 65 + 1)) + 65;
+      // Generate random score between 60 and 80
+      const riskScore = Math.floor(Math.random() * (80 - 60 + 1)) + 60;
       console.log('Generated risk score:', riskScore);
 
       // Store the risk score in localStorage
@@ -74,18 +81,35 @@ export const Dashboard = () => {
       // Prepare the data in the format expected by the backend
       const applicationData = {
         full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phoneNumber,
         business_type: formData.businessType,
         loan_amount: parseFloat(formData.loanAmount),
-        risk_score: riskScore
+        risk_score: riskScore,
+        income: parseFloat(formData.annualIncome),
+        employment_status: 'self-employed',
+        employment_duration: parseInt(formData.yearsInBusiness),
+        loan_purpose: formData.loanPurpose,
+        credit_score: 700, // Default credit score
+        debt_to_income_ratio: 0.3, // Default ratio
+        collateral_value: 0, // Default value
+        bank_account_age: 12, // Default value
+        reference1Email: formData.reference1Email,
+        reference2Email: formData.reference2Email
       };
 
+      // Store business type in localStorage for results page
+      localStorage.setItem('currentBusinessType', formData.businessType);
+
       console.log('Sending data to backend:', applicationData);
-      const response = await axios.post('http://localhost:5000/api/applications', applicationData);
+      const response = await axios.post('http://localhost:5000/api/applications/submit', applicationData);
       console.log('Response from backend:', response.data);
 
-      if (response.data.application_id) {
+      if (response.data.id) {
         // Store the application ID in localStorage
-        localStorage.setItem('currentApplicationId', response.data.application_id);
+        localStorage.setItem('currentApplicationId', response.data.id);
+        // Store the risk score in localStorage
+        localStorage.setItem('currentRiskScore', riskScore);
         // Redirect to results page
         navigate('/results');
       } else {
@@ -93,7 +117,8 @@ export const Dashboard = () => {
       }
     } catch (err) {
       console.error('Error submitting application:', err);
-      setLoadingMessage('Failed to submit application. Please try again.');
+      setValidationError(err.response?.data?.error || 'Failed to submit application. Please try again.');
+      setLoadingMessage('');
     } finally {
       setIsLoading(false);
     }

@@ -212,14 +212,29 @@ function AdminDashboard() {
             {filteredApplications
               .filter(application => application.risk_score > 0)
               .map((application, index) => {
-                let feedback = 'Positive';
-                if (index < 2) feedback = 'Pending';
-                else if (index >= filteredApplications.filter(app => app.risk_score > 0).length - 3) feedback = 'Negative';
-                let finalScore = '-';
-                if (feedback === 'Positive') finalScore = application.risk_score + 10;
-                else if (feedback === 'Negative') finalScore = application.risk_score;
+                // Generate random risk score between 60-80 for each user
+                const riskScore = Math.floor(Math.random() * (80 - 60 + 1)) + 60;
+                
+                // Determine feedback based on index
+                let feedback;
+                let finalScore;
+                
+                if (index < 5) {
+                  // First 5 users are negative
+                  feedback = 'Negative';
+                  finalScore = riskScore;
+                } else if (index < 33) {
+                  // Next 28 users are positive
+                  feedback = 'Positive';
+                  finalScore = riskScore + 15;
+                } else {
+                  // All remaining users are pending
+                  feedback = 'Pending';
+                  finalScore = '-';
+                }
+
                 return {
-                  application,
+                  application: { ...application, risk_score: riskScore },
                   index,
                   feedback,
                   finalScore
@@ -252,19 +267,19 @@ function AdminDashboard() {
                 <tr key={application.id}>
                   <td>{index + 1}</td>
                   <td>{application.full_name}</td>
-                  <td>{application.business_type}</td>
+                  <td>{application.business_type || 'Not specified'}</td>
                   <td>₹{application.loan_amount.toLocaleString()}</td>
                   <td>{application.risk_score}%</td>
                   <td>
                     <span className={
                       feedback === 'Positive' ? styles.feedbackPositive :
-                      feedback === 'Negative' ? styles.feedbackNegative :
-                      styles.feedbackPending
+                      feedback === 'Pending' ? styles.feedbackPending :
+                      styles.feedbackNegative
                     }>
                       {feedback}
                     </span>
                   </td>
-                  <td>{finalScore !== '-' ? finalScore + '%' : '-'}</td>
+                  <td>{finalScore === '-' ? '-' : finalScore + '%'}</td>
                 </tr>
               ))}
           </tbody>

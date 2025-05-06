@@ -29,6 +29,7 @@ const Results = () => {
       try {
         const applicationId = localStorage.getItem('currentApplicationId');
         const riskScore = localStorage.getItem('currentRiskScore');
+        const businessType = localStorage.getItem('currentBusinessType');
         
         if (!applicationId || !riskScore) {
           navigate('/dashboard');
@@ -45,10 +46,10 @@ const Results = () => {
 
         setResults({
           business_name: application.full_name,
-          business_type: application.business_type,
+          business_type: businessType || application.business_type || 'Not specified',
           annual_revenue: application.loan_amount * 3, // Estimated based on loan amount
           loan_amount: application.loan_amount,
-          loan_purpose: "Business Expansion",
+          loan_purpose: application.loan_purpose || "Business Expansion",
           credit_score: creditScore,
           status: creditScore >= 75 ? "APPROVED" : "REJECTED"
         });
